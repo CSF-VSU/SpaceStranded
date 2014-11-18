@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Button {
 
+    private static float BTN_PADDING_LEFT = 5;
+    private static float BTN_PADDING_TOP = 5;
+
     String caption;
     PressAction action;
 
@@ -46,5 +49,7 @@ public class Button {
             btnImage.draw(batch);
         else
             btnImageHovered.draw(batch);
+
+        UISpriteHolder.regularFont.draw(batch, caption, btnImage.getX() + BTN_PADDING_LEFT, btnImage.getY() + BTN_PADDING_TOP);
     }
 }

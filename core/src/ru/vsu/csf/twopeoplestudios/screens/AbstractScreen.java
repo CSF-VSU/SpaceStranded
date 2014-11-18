@@ -9,8 +9,8 @@ import ru.vsu.csf.twopeoplestudios.screens.ui.UISpriteHolder;
 
 public class AbstractScreen implements Screen {
 
-    public static final int SCREEN_WIDTH = 800;
-    public static final int SCREEN_HEIGHT = 600;
+    public static final int SCREEN_WIDTH = 1280;
+    public static final int SCREEN_HEIGHT = 1024;
 
     private UISpriteHolder holder;
 
