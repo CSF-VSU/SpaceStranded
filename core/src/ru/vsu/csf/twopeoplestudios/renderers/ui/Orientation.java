@@ -1,4 +1,4 @@
-package ru.vsu.csf.twopeoplestudios.screens.ui;
+package ru.vsu.csf.twopeoplestudios.renderers.ui;
 
 public enum Orientation {
     VERTICAL,

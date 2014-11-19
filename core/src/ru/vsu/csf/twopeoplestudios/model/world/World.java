@@ -1,6 +1,6 @@
-package ru.vsu.csf.twopeoplestudios.model.map;
+package ru.vsu.csf.twopeoplestudios.model.world;
 
-public class Map {
+public class World {
 
     public static int size;
     public static MapTile[][] map;

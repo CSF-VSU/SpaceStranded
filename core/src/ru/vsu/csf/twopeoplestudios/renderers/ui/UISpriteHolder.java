@@ -1,4 +1,4 @@
-package ru.vsu.csf.twopeoplestudios.screens.ui;
+package ru.vsu.csf.twopeoplestudios.renderers.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

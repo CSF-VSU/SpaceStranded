@@ -1,4 +1,4 @@
-package ru.vsu.csf.twopeoplestudios.model.map;
+package ru.vsu.csf.twopeoplestudios.model.world;
 
 public class MapTile {
 

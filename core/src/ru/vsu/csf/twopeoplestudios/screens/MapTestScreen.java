@@ -6,24 +6,32 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import ru.vsu.csf.twopeoplestudios.model.map.Map;
-import ru.vsu.csf.twopeoplestudios.model.map.MapTile;
+import ru.vsu.csf.twopeoplestudios.model.world.MapTile;
+import ru.vsu.csf.twopeoplestudios.model.world.World;
 
 import java.util.ArrayList;
 
-public class MainMenuScreen extends AbstractScreen {
+public class MapTestScreen extends AbstractScreen {
 
     private static final int TILE_SIZE = 16;
     private static final int MARGIN_LEFT = 128;
     private static final int MARGIN_BOTTOM = 0;
 
     private TextureRegion water;
-
     private ArrayList<TextureRegion> lands;
 
     Vector2 mousePos = new Vector2(0, 0);
 
-    public MainMenuScreen(Game game) {
+    /*private volatile boolean isGenerating = false;
+    private final Thread mapGenerator = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            isGenerating = true;
+            Map.create();
+            isGenerating = false;
+        }
+    });*/
+    public MapTestScreen(Game game) {
         super(game);
     }
 
@@ -42,7 +50,8 @@ public class MainMenuScreen extends AbstractScreen {
 
                     @Override
                     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                        Map.create();
+                        World.create();
+                        //mapGenerator.start();
                         return true;
                     }
                 }
@@ -51,32 +60,23 @@ public class MainMenuScreen extends AbstractScreen {
         water = new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/water.png")));
 
         lands = new ArrayList<TextureRegion>() {{
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land1.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land2.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land3.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land4.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land5.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land6.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land7.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land8.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land9.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land10.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land11.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land12.png"))));
-            add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land13.png"))));
+            for (int i = 0; i < 13; i++)
+                add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land" + (i + 1) + ".png"))));
         }};
 
-        Map.create();
+        //mapGenerator.start();
+        World.create();
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
 
+        //if (!isGenerating || mapGenerator.isAlive()) {
         batch.begin();
-        MapTile[][] map = Map.map;
-        int width = Map.map.length;
-        int height = Map.map[0].length;
+        MapTile[][] map = World.map;
+        int width = World.map.length;
+        int height = World.map[0].length;
 
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
@@ -88,7 +88,6 @@ public class MainMenuScreen extends AbstractScreen {
                         if (map[i][j].height >= lands.size())
                             batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                         else {
-                            Gdx.app.log("", String.valueOf(map[i][j].height - 1));
                             batch.draw(lands.get(map[i][j].height - 1), i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                         }
                         break;
@@ -96,5 +95,7 @@ public class MainMenuScreen extends AbstractScreen {
             }
         }
         batch.end();
+        //}
+
     }
 }
