@@ -14,7 +14,6 @@ import ru.vsu.csf.twopeoplestudios.model.map.Map;
 
 public class MapRenderer {
 
-    //Hero hero; //TODO: заменить на map, который содержит hero.
     public Map map;
     HerbStorage herbStorage;
 
@@ -31,7 +30,6 @@ public class MapRenderer {
         world = new World(new Vector2(0, 0), true);
 
         herbStorage = HerbStorage.getInstance();
-        //hero = new Hero(world);
         map = new Map(world);
 
         heroTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/hero.png")));
@@ -49,7 +47,6 @@ public class MapRenderer {
         for (Herb h : map.herbs) {
             batch.draw(HerbStorage.getInstance().getTexture(h.getId()), h.getPosition().x, h.getPosition().y, 1, 1);
         }
-        //herbStorage.draw(batch, 0);
 
         batch.draw(heroTexture, map.hero.getPosition().x - 0.5f, map.hero.getPosition().y - 0.5f, 1, 2);
         batch.end();
