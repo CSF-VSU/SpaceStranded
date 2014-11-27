@@ -1,6 +1,7 @@
 package ru.vsu.csf.twopeoplestudios;
 
 import com.badlogic.gdx.Game;
+import ru.vsu.csf.twopeoplestudios.screens.GameScreen;
 import ru.vsu.csf.twopeoplestudios.screens.MapTestScreen;
 
 public class SpaceStranded extends Game {

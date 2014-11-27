@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class MapTestScreen extends AbstractScreen {
 
-    private static final int TILE_SIZE = 1;
+    private static final int TILE_SIZE = 4;
     private static final int MARGIN_LEFT = 128;
-    private static final int MARGIN_BOTTOM = 0;
+    private static final int MARGIN_BOTTOM = 100;
 
     private TextureRegion water;
     private ArrayList<TextureRegion> lands;
@@ -95,13 +95,13 @@ public class MapTestScreen extends AbstractScreen {
                 for (int i = 0; i < width; i++) {
                     switch (map[i][j].type) {
                         case WATER:
-                            batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                            batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             break;
                         default:
                             if (map[i][j].height >= lands.size())
-                                batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             else {
-                                batch.draw(lands.get(map[i][j].height), i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                batch.draw(lands.get(map[i][j].height), i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             }
                             break;
                     }
