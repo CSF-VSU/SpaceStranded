@@ -13,7 +13,7 @@ public class World {
     public int height;
 
     public void create() {
-        height = 0;
+
         size = 128;
         map = new MapTile[2*size][size];
         /*for (int i = 0; i < 2*size; i++)
@@ -118,22 +118,22 @@ public class World {
             }*/
 
 
-        /*for (int i = 0; i < size; i++)
+        for (int i = 0; i < 2*size; i++)
             for (int j = 0; j < size; j++)
                 if (map[i][j].type == TerrainType.WATER)
-                    map[i][j].height = 0;
+                    map[i][j].height = -1;
                 else
-                    map[i][j].height = -1;*/
-
-        /*for (int e = 0; e < 20; e++) {
+                    map[i][j].height = -2;
+        height = -1;
+        for (int e = 0; e < 100; e++) {
             height++;
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < 2*size; i++)
                 for (int j = 0; j < size; j++)
                     if (checkHeight(i, j, height)) {
-                        setCell(i, j, TerrainType.SAND); //песок сгенерирован
+                        setCell(map, i, j, TerrainType.SAND); //песок сгенерирован
                         map[i][j].height = height;
                     }
-        }*/
+        }
     }
 
 
@@ -149,7 +149,7 @@ public class World {
     public boolean checkHeight(int i, int j, int height) {
         return (map[i][j].type == TerrainType.GROUND) &&
                 ((i - 1 >= 0) && (map[i - 1][j].height + 1 == height) ||
-                        (i + 1 < size) && (map[i + 1][j].height + 1 == height) ||
+                        (i + 1 < size*2) && (map[i + 1][j].height + 1 == height) ||
                         (j - 1 >= 0) && (map[i][j - 1].height + 1 == height) ||
                         (j + 1 < size) && (map[i][j + 1].height + 1 == height));
     }
