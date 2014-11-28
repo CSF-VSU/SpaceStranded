@@ -13,12 +13,23 @@ import java.util.ArrayList;
 
 public class MapTestScreen extends AbstractScreen {
 
-    private static final int TILE_SIZE = 16;
+    private static final int TILE_SIZE = 1;
     private static final int MARGIN_LEFT = 128;
     private static final int MARGIN_BOTTOM = 0;
 
     private TextureRegion water;
     private ArrayList<TextureRegion> lands;
+
+    private final World world = new World();
+    private boolean isCreatingWorld = false;
+    private final Runnable mapGen = new Runnable() {
+        @Override
+        public void run() {
+            isCreatingWorld = true;
+            world.create();
+            isCreatingWorld = false;
+        }
+    };
 
     Vector2 mousePos = new Vector2(0, 0);
 
@@ -50,8 +61,10 @@ public class MapTestScreen extends AbstractScreen {
 
                     @Override
                     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                        World.create();
-                        //mapGenerator.start();
+                        if (!isCreatingWorld) {
+                            Thread fromMouseThread = new Thread(mapGen);
+                            fromMouseThread.start();
+                        }
                         return true;
                     }
                 }
@@ -64,38 +77,37 @@ public class MapTestScreen extends AbstractScreen {
                 add(new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/Land" + (i + 1) + ".png"))));
         }};
 
-        //mapGenerator.start();
-        World.create();
+        Thread t = new Thread(mapGen);
+        t.start();
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
 
-        //if (!isGenerating || mapGenerator.isAlive()) {
-        batch.begin();
-        MapTile[][] map = World.map;
-        int width = World.map.length;
-        int height = World.map[0].length;
+        if (!isCreatingWorld) {
+            batch.begin();
+            MapTile[][] map = world.map;
+            int width = world.map.length;
+            int height = world.map[0].length;
 
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < width; i++) {
-                switch (map[i][j].type) {
-                    case WATER:
-                        batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
-                        break;
-                    default:
-                        if (map[i][j].height >= lands.size())
+            for (int j = 0; j < height; j++) {
+                for (int i = 0; i < width; i++) {
+                    switch (map[i][j].type) {
+                        case WATER:
                             batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
-                        else {
-                            batch.draw(lands.get(map[i][j].height - 1), i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
-                        }
-                        break;
+                            break;
+                        default:
+                            if (map[i][j].height >= lands.size())
+                                batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                            else {
+                                batch.draw(lands.get(map[i][j].height), i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                            }
+                            break;
+                    }
                 }
             }
+            batch.end();
         }
-        batch.end();
-        //}
-
     }
 }
