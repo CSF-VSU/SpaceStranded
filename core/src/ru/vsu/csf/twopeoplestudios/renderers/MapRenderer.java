@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbStorage;
+import ru.vsu.csf.twopeoplestudios.model.contactListener.WorldContactListener;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
 
 public class MapRenderer {
@@ -28,6 +29,7 @@ public class MapRenderer {
         camera = new OrthographicCamera(40, 32);
         camera.position.set(0, 0, 0);
         world = new World(new Vector2(0, 0), true);
+        world.setContactListener(new WorldContactListener());
 
         herbStorage = HerbStorage.getInstance();
         map = new Map(world);
@@ -42,7 +44,7 @@ public class MapRenderer {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        map.update(batch, delta);
+        map.update(delta);
 
         for (Herb h : map.herbs) {
             batch.draw(HerbStorage.getInstance().getTexture(h.getId()), h.getPosition().x, h.getPosition().y, 1, 1);

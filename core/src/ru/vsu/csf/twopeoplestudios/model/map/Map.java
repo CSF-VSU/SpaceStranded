@@ -1,33 +1,47 @@
 package ru.vsu.csf.twopeoplestudios.model.map;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Map {
 
     World world;
 
-    public ArrayList<Herb> herbs;
+    public LinkedList<Herb> herbs;
+    public LinkedList<Body> toDestroy;
+
     public Hero hero;
 
-    public Map(World world) {
+    public Map(final World world) {
         this.world = world;
-        hero = new Hero(world);
-        herbs = new ArrayList<Herb>() {{
-            add(new Herb(0, new Vector2(4, 4)));
-            add(new Herb(0, new Vector2(-2, -2)));
+        hero = new Hero(world, this);
+        herbs = new LinkedList<Herb>() {{
+            add(new Herb(0, new Vector2(4, 4), world));
+            add(new Herb(0, new Vector2(-2, -2), world));
+            add(new Herb(1, new Vector2(-3, 5), world));
+            add(new Herb(1, new Vector2(6, -2), world));
+            add(new Herb(2, new Vector2(-4, -4), world));
+            add(new Herb(2, new Vector2(-6, -8), world));
         }};
+        toDestroy = new LinkedList<Body>();
     }
 
-    public void update(Batch batch, float delta) {
-        /*for (Herb h : herbs) {
-            HerbStorage.getInstance().draw(batch, h.getId());
-        }*/
+    public void update(float delta) {
+        for (Body b : toDestroy) {
+            world.destroyBody(b);
+        }
+        toDestroy.clear();
+
         hero.update(delta);
+    }
+
+    public void destroyHerb(Herb herb) {
+        toDestroy.add(herb.getBody());
+        herbs.remove(herbs.indexOf(herb));
     }
 }

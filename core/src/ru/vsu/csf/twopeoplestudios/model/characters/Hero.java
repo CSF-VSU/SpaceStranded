@@ -3,12 +3,18 @@ package ru.vsu.csf.twopeoplestudios.model.characters;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
+import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
+import ru.vsu.csf.twopeoplestudios.model.map.Map;
 
 public class Hero {
 
     static final float VELOCITY = 5f;
+    static final float RUN_SPEED = 25f;
 
+    //region Declarations
     Vector2 position;
     Vector2 velocity;
 
@@ -18,13 +24,19 @@ public class Hero {
     boolean downPressed;
 
     World world;
+    Map map;
     Body body;
+
+    Inventory inventory;
+    Herb herbUnderFeet;
+    //endregion
 
     public Vector2 getPosition() {
         return body.getPosition();
     }
 
-    public Hero(World world) {
+    //region Creating
+    public Hero(World world, Map map) {
         position = new Vector2(0, 0);
         velocity = new Vector2(0, 0);
         leftPressed = false;
@@ -33,12 +45,16 @@ public class Hero {
         downPressed = false;
 
         this.world = world;
+        this.map = map;
         createBody();
+
+        herbUnderFeet = null;
+        inventory = new Inventory();
     }
 
     private void createBody() {
         BodyDef bodyDef = new BodyDef() {{
-            type = BodyType.DynamicBody;
+            type = BodyType.DynamicBody; //динамическое = можно воздействовать на него силами или импульсами
             position.set(0, 0);
         }};
 
@@ -55,17 +71,53 @@ public class Hero {
         }};
 
         body.createFixture(fixtureDef);
-        body.setFixedRotation(true);
+        body.setFixedRotation(true); //запрещаем телу поворачиваться в процессе столновений или приложения сил и импульсов
+        body.setUserData(new HeroUserData(this)); //юзер-дата, по которой из столкновения можно получить ссылку на героя
 
         polygonShape.dispose();
     }
+    //endregion
 
+    //region Update
     public void update(float delta) {
         handleInputFlags();
-        velocity.scl(delta).scl(VELOCITY);
-        body.setTransform(body.getPosition().add(velocity), 0);
-    }
 
+        Vector2 vel = body.getLinearVelocity();
+
+        if (!leftPressed && !rightPressed) {
+            body.setLinearVelocity(vel.x * 0.85f, vel.y);
+        }
+        if (!upPressed && !downPressed) {
+            body.setLinearVelocity(vel.x, vel.y * 0.85f);
+        }
+
+        //величина импульса умножается на delta, чтобы персонаж двигаелся с одинаковой скоростью вне зависимости от фпс
+        //todo: распределить импульсы так, чтобы движение по диагонали было с той же скоростью, что и по горизонтали/вертикали
+        if (leftPressed && vel.x > -VELOCITY) {
+            body.applyLinearImpulse(-RUN_SPEED * delta, 0, body.getPosition().x, body.getPosition().y, true);
+            body.setTransform(body.getPosition().x, body.getPosition().y, 0);
+        }
+        if (rightPressed && vel.x < VELOCITY) {
+            body.applyLinearImpulse(RUN_SPEED * delta, 0, body.getPosition().x, body.getPosition().y, true);
+            body.setTransform(body.getPosition().x, body.getPosition().y, 0);
+        }
+
+        if (upPressed && vel.y < VELOCITY) {
+            body.applyLinearImpulse(0, RUN_SPEED * delta, body.getPosition().x, body.getPosition().y, true);
+            body.setTransform(body.getPosition().x, body.getPosition().y, 0);
+        }
+        if (downPressed && vel.y > -VELOCITY) {
+            body.applyLinearImpulse(0, -RUN_SPEED * delta, body.getPosition().x, body.getPosition().y, true);
+            body.setTransform(body.getPosition().x, body.getPosition().y, 0);
+        }
+
+        if (!(leftPressed || rightPressed || downPressed || upPressed)) {
+            body.setLinearVelocity(vel.x * 0.91f, vel.y * 0.91f);
+        }
+    }
+    //endregion
+
+    //region Handling input
     private void handleInputFlags() {
         if (leftPressed)
             velocity.set(-1, velocity.y);
@@ -112,6 +164,28 @@ public class Hero {
     }
 
     public void keyTyped(char character) {
-        //...
+        switch (character) {
+            case 'e':
+            case 'у':
+                if (herbUnderFeet != null)
+                    collectHerb();
+                break;
+        }
+    }
+    //endregion
+
+    public void onTouchHerb(Herb herb) {
+        this.herbUnderFeet = herb;
+    }
+
+    public void onStopTouchingHerb() {
+        this.herbUnderFeet = null;
+    }
+
+    private void collectHerb() {
+        if (this.inventory.tryToPut(herbUnderFeet)) {
+            map.destroyHerb(herbUnderFeet);
+            herbUnderFeet = null;
+        }
     }
 }

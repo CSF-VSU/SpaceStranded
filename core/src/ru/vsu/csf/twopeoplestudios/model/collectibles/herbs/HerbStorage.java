@@ -15,6 +15,8 @@ public class HerbStorage {
         herbs = new ArrayList<HerbInfo>();
         textures = new ArrayList<TextureRegion>();
         textures.add(0, new TextureRegion(new Texture(Gdx.files.internal("gfx/herbs/0.png"))));
+        textures.add(1, new TextureRegion(new Texture(Gdx.files.internal("gfx/herbs/1.png"))));
+        textures.add(2, new TextureRegion(new Texture(Gdx.files.internal("gfx/herbs/2.png"))));
     }
 
     private static HerbStorage instance;
