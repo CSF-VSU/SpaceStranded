@@ -8,6 +8,7 @@ import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
+import ru.vsu.csf.twopeoplestudios.screens.GameScreen;
 
 public class Hero {
 
@@ -28,11 +29,18 @@ public class Hero {
     Body body;
 
     Inventory inventory;
+    GameScreen gameScreen; //to call show/hide inventory
+    boolean isShowingInventory;
+
     Herb herbUnderFeet;
     //endregion
 
     public Vector2 getPosition() {
         return body.getPosition();
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 
     //region Creating
@@ -50,6 +58,11 @@ public class Hero {
 
         herbUnderFeet = null;
         inventory = new Inventory();
+        isShowingInventory = false;
+    }
+
+    public void initGameScreen(GameScreen screen) {
+        this.gameScreen = screen;
     }
 
     private void createBody() {
@@ -170,6 +183,16 @@ public class Hero {
                 if (herbUnderFeet != null)
                     collectHerb();
                 break;
+            case 'i':
+            case 'ш':
+                if (!isShowingInventory) {
+                    isShowingInventory = true;
+                    gameScreen.showInventory();
+                } else {
+                    isShowingInventory = false;
+                    gameScreen.hideInventory();
+                }
+                break;
         }
     }
     //endregion
@@ -188,4 +211,5 @@ public class Hero {
             herbUnderFeet = null;
         }
     }
+
 }

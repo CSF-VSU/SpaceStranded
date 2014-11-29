@@ -2,10 +2,14 @@ package ru.vsu.csf.twopeoplestudios.model.collectibles;
 
 public class Inventory {
 
-    private ICollectible[] data;
+    private Collectible[] data;
+
+    public Collectible[] getData() {
+        return data;
+    }
 
     public Inventory() {
-        data = new ICollectible[40];
+        data = new Collectible[40];
     }
 
     public int getEmptySlot() {
@@ -16,7 +20,7 @@ public class Inventory {
         return -1;
     }
 
-    public boolean tryToPut(ICollectible collectible) {
+    public boolean tryToPut(Collectible collectible) {
         int index = getEmptySlot();
         if (index == -1)
             return false;

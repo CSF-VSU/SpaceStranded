@@ -19,7 +19,7 @@ public class MapRenderer {
     HerbStorage herbStorage;
 
     private Box2DDebugRenderer debugRenderer;
-    private OrthographicCamera camera;
+    public OrthographicCamera camera;
     private World world;
 
     TextureRegion heroTexture;
@@ -47,7 +47,8 @@ public class MapRenderer {
         map.update(delta);
 
         for (Herb h : map.herbs) {
-            batch.draw(HerbStorage.getInstance().getTexture(h.getId()), h.getPosition().x, h.getPosition().y, 1, 1);
+            batch.draw(SpriteHolder.getTexture(h.getId()), h.getPosition().x, h.getPosition().y, 1, 1);
+            //batch.draw(HerbStorage.getInstance().getTexture(h.getId()), h.getPosition().x, h.getPosition().y, 1, 1);
         }
 
         batch.draw(heroTexture, map.hero.getPosition().x - 0.5f, map.hero.getPosition().y - 0.5f, 1, 2);

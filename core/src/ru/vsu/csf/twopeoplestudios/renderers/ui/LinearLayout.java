@@ -21,8 +21,8 @@ public class LinearLayout {
     public LinearLayout() {
         buttons = new ArrayList<Button>();
         orientation = Orientation.VERTICAL;
-        BUTTON_WIDTH = UISpriteHolder.BUTTON.getRegionWidth();
-        BUTTON_HEIGHT = UISpriteHolder.BUTTON.getRegionHeight();
+        //BUTTON_WIDTH = UISpriteHolder.BUTTON.getRegionWidth();
+        //BUTTON_HEIGHT = UISpriteHolder.BUTTON.getRegionHeight();
     }
 
     public LinearLayout(Orientation orientation) {

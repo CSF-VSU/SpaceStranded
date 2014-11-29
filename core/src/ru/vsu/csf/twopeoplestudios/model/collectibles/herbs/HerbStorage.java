@@ -1,22 +1,15 @@
 package ru.vsu.csf.twopeoplestudios.model.collectibles.herbs;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import java.util.ArrayList;
 
 public class HerbStorage {
 
     ArrayList<HerbInfo> herbs;
-    public ArrayList<TextureRegion> textures;
+
 
     private HerbStorage() {
         herbs = new ArrayList<HerbInfo>();
-        textures = new ArrayList<TextureRegion>();
-        textures.add(0, new TextureRegion(new Texture(Gdx.files.internal("gfx/herbs/0.png"))));
-        textures.add(1, new TextureRegion(new Texture(Gdx.files.internal("gfx/herbs/1.png"))));
-        textures.add(2, new TextureRegion(new Texture(Gdx.files.internal("gfx/herbs/2.png"))));
+
     }
 
     private static HerbStorage instance;
@@ -27,7 +20,7 @@ public class HerbStorage {
         return instance;
     }
 
-    public TextureRegion getTexture(int id) {
+    /*public TextureRegion getTexture(int id) {
         return textures.get(id);
-    }
+    }*/
 }

@@ -2,12 +2,12 @@ package ru.vsu.csf.twopeoplestudios.model.collectibles.herbs;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.ICollectible;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HerbUserData;
 
-public class Herb implements ICollectible {
-    protected int id;
+public class Herb extends Collectible {
+
     protected Vector2 position;
     protected Body body;
 

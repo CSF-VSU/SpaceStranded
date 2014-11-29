@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import ru.vsu.csf.twopeoplestudios.renderers.SpriteHolder;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 
 public class AbstractScreen implements Screen {
@@ -12,12 +13,10 @@ public class AbstractScreen implements Screen {
     public static final int SCREEN_WIDTH = 1280;
     public static final int SCREEN_HEIGHT = 1024;
 
-    private UISpriteHolder holder;
-
     Game game;
     final SpriteBatch batch = new SpriteBatch();
 
-    public AbstractScreen(Game game){
+    public AbstractScreen(Game game) {
         this.game = game;
     }
 
@@ -34,7 +33,8 @@ public class AbstractScreen implements Screen {
 
     @Override
     public void show() {
-        holder = new UISpriteHolder();
+        UISpriteHolder holder = new UISpriteHolder();
+        SpriteHolder spriteHolder = new SpriteHolder();
     }
 
     @Override

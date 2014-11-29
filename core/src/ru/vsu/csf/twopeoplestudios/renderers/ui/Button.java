@@ -17,12 +17,12 @@ public class Button {
     public Button(String caption) {
         this.caption = caption;
 
-        this.btnImage = new Sprite(UISpriteHolder.BUTTON) {{
+        /*this.btnImage = new Sprite(UISpriteHolder.BUTTON) {{
             setPosition(0, 0);
         }};
         this.btnImageHovered = new Sprite(UISpriteHolder.BUTTON_HOVERED) {{
             setPosition(0, 0);
-        }};
+        }};*/
     }
 
     public Button setPosition(float x, float y) {
@@ -50,6 +50,6 @@ public class Button {
         else
             btnImageHovered.draw(batch);
 
-        UISpriteHolder.regularFont.draw(batch, caption, btnImage.getX() + BTN_PADDING_LEFT, btnImage.getY() + BTN_PADDING_TOP);
+        //UISpriteHolder.regularFont.draw(batch, caption, btnImage.getX() + BTN_PADDING_LEFT, btnImage.getY() + BTN_PADDING_TOP);
     }
 }

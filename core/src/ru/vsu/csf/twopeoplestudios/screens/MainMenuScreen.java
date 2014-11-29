@@ -4,18 +4,17 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 
-public class UIDemoScreen extends AbstractScreen {
+public class MainMenuScreen extends AbstractScreen {
 
     private Stage stage;
-    private TextureAtlas atlas;
-    private Skin skin;
     private Table table;
 
     private TextButton button;
@@ -24,12 +23,12 @@ public class UIDemoScreen extends AbstractScreen {
     private BitmapFont bitmapFont;
 
     //todo: изучить остальные компоненты!
-    private Label title;
-    private ProgressBar progressBar;
+    /*private Label title;
+    private ProgressBar progressBar;*/
 
     private TextureRegion bg;
 
-    public UIDemoScreen(Game game) {
+    public MainMenuScreen(Game game) {
         super(game);
     }
 
@@ -42,22 +41,11 @@ public class UIDemoScreen extends AbstractScreen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage); //вот тут вот интересный момент: мы полностью отдаем управление stage.. а если и нам оно нужно?..
 
-        atlas = new TextureAtlas(Gdx.files.internal("gfx/ui/button.pack")); //класс для загрузки текстурных паков - здеся атласы
-        skin = new Skin(atlas); //считай, стиль. Применяется к разным UI-элементам
-        table = new Table(skin) {{
+        table = new Table(UISpriteHolder.skin) {{
             setBounds(50, 50, 500, 500);
         }}; // типа лэйаута
-        bitmapFont = new BitmapFont(Gdx.files.internal("gfx/fonts/main32.fnt"), false); //подгрузка готового шрифта из файла
 
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle() {{ //стиль, применяющийся для создаваемых кнопок
-            up = skin.getDrawable("button.normal"); //сами строки эти можно подсмотреть в *.pack-файле
-            down = skin.getDrawable("button.pressed");
-            pressedOffsetX = 2; //величина эффекта вдавливания кнопки при нажатии
-            pressedOffsetY = -2;
-            font = bitmapFont;
-        }};
-
-        button = new TextButton("Start new game", textButtonStyle);
+        button = new TextButton("Start new game", UISpriteHolder.textButtonStyle);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -65,7 +53,7 @@ public class UIDemoScreen extends AbstractScreen {
             }
         });
 
-        exitBtn = new TextButton("Exit", textButtonStyle);
+        exitBtn = new TextButton("Exit", UISpriteHolder.textButtonStyle);
         exitBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -100,8 +88,6 @@ public class UIDemoScreen extends AbstractScreen {
     @Override
     public void dispose() {
         //не забываем после себя подчищать код :3
-        skin.dispose();
-        atlas.dispose();
         bitmapFont.dispose();
         bg.getTexture().dispose();
         stage.dispose();

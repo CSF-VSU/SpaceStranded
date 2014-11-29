@@ -1,34 +1,32 @@
 package ru.vsu.csf.twopeoplestudios.renderers.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class UISpriteHolder {
 
-    public static TextureRegion BUTTON;
-    public static TextureRegion BUTTON_HOVERED;
+    public static BitmapFont font32;
 
-    public static BitmapFont regularFont;
-    public static BitmapFont titleFont;
+    public static TextureAtlas atlas;
+    public static Skin skin;
+
+    public static TextButton.TextButtonStyle textButtonStyle;
 
     public UISpriteHolder() {
+        atlas = new TextureAtlas(Gdx.files.internal("gfx/ui/button.pack")); //класс для загрузки текстурных паков - здеся атласы
+        skin = new Skin(atlas); //считай, стиль. Применяется к разным UI-элементам
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("gfx/fonts/picaresque.ttf"));
-        regularFont = generator.generateFont(new FreeTypeFontGenerator.FreeTypeFontParameter() {{
-            size = 12;
-        }}); // font size 12 pixels
-        regularFont.setColor(Color.BLUE);
+        font32 = new BitmapFont(Gdx.files.internal("gfx/fonts/main32.fnt"), false); //подгрузка готового шрифта из файла
 
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("gfx/fonts/postmodernTitles.ttf"));
-        titleFont = generator.generateFont(20);
-        titleFont.setColor(Color.BLUE);
-
-        generator.dispose(); // don't forget to dispose to avoid memory leaks!
-
-        //BUTTON = new TextureRegion(new Texture(Gdx.files.internal("gfx/ui/button.png")));
-        //BUTTON_HOVERED = new TextureRegion(new Texture(Gdx.files.internal("gfx/ui/buttonHovered.png")));
+        textButtonStyle = new TextButton.TextButtonStyle() {{ //стиль, применяющийся для создаваемых кнопок
+            up = skin.getDrawable("button.normal"); //сами строки эти можно подсмотреть в *.pack-файле
+            down = skin.getDrawable("button.pressed");
+            pressedOffsetX = 2; //величина эффекта вдавливания кнопки при нажатии
+            pressedOffsetY = -2;
+            font = font32;
+        }};
     }
 }
