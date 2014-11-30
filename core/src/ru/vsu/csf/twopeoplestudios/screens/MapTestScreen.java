@@ -87,7 +87,7 @@ public class MapTestScreen extends AbstractScreen {
         super.render(delta);
 
         if (!isCreatingWorld) {
-            batch.begin();
+            cameraBatch.begin();
             MapTile[][] map = world.map;
             int width = world.map.length;
             int height = world.map[0].length;
@@ -96,19 +96,19 @@ public class MapTestScreen extends AbstractScreen {
                 for (int i = 0; i < width; i++) {
                     switch (map[i][j].type) {
                         case WATER:
-                            batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                            cameraBatch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             break;
                         default:
                             if (map[i][j].height >= lands.size())
-                                batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                cameraBatch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             else {
-                                batch.draw(lands.get(map[i][j].height), i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                cameraBatch.draw(lands.get(map[i][j].height), i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             }
                             break;
                     }
                 }
             }
-            batch.end();
+            cameraBatch.end();
         }
     }
 }

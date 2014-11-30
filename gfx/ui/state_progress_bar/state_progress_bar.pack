@@ -1,0 +1,37 @@
+
+state_progress_bar.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+state_progress_bar_green
+  rotate: false
+  xy: 0, 0
+  size: 32, 32
+  split: 2, 2, 2, 2
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+state_progress_bar_yellow
+  rotate: false
+  xy: 32, 0
+  size: 32, 32
+  split: 2, 2, 2, 2
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+state_progress_bar_empty
+  rotate: false
+  xy: 64, 0
+  size: 32, 32
+  split: 1, 1, 1, 1
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+state_progress_bar_red
+  rotate: false
+  xy: 96, 0
+  size: 32, 32
+  split: 2, 2, 2, 2
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

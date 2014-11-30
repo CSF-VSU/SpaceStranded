@@ -11,7 +11,8 @@ import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 public class AbstractScreen implements Screen {
 
     Game game;
-    final SpriteBatch batch = new SpriteBatch();
+    final SpriteBatch cameraBatch = new SpriteBatch();
+    final SpriteBatch uiBatch = new SpriteBatch();
 
     public AbstractScreen(Game game) {
         this.game = game;
@@ -51,6 +52,6 @@ public class AbstractScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        cameraBatch.dispose();
     }
 }

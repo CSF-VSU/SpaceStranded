@@ -1,0 +1,21 @@
+
+progress_bar.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+prBarFilled
+  rotate: false
+  xy: 0, 0
+  size: 34, 32
+  split: 2, 2, 2, 2
+  orig: 34, 32
+  offset: 0, 0
+  index: -1
+prBarEmpty
+  rotate: false
+  xy: 34, 0
+  size: 34, 32
+  split: 1, 1, 1, 1
+  orig: 34, 32
+  offset: 0, 0
+  index: -1
