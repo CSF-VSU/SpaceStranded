@@ -10,9 +10,6 @@ import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 
 public class AbstractScreen implements Screen {
 
-    public static final int SCREEN_WIDTH = 1280;
-    public static final int SCREEN_HEIGHT = 1024;
-
     Game game;
     final SpriteBatch batch = new SpriteBatch();
 
@@ -33,8 +30,8 @@ public class AbstractScreen implements Screen {
 
     @Override
     public void show() {
-        UISpriteHolder holder = new UISpriteHolder();
-        SpriteHolder spriteHolder = new SpriteHolder();
+        UISpriteHolder.init();
+        SpriteHolder.init();
     }
 
     @Override

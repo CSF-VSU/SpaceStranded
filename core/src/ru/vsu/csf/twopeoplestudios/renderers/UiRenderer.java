@@ -6,13 +6,14 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector3;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
+import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 
 public class UiRenderer {
 
     private static float INVENTORY_MARGIN_LEFT = 200;
     private static float INVENTORY_MARGIN_TOP = 800;
-    private static float PANEL_MARGIN_LEFT = 250;
-    private static float PANEL_MARGIN_TOP = 900;
+    private static float PANEL_MARGIN_LEFT = 400;
+    private static float PANEL_MARGIN_TOP = 1020;
 
     private static int INVENTORY_SIZE_WIDTH = 10;
     private static int INVENTORY_SIZE_HEIGHT = 4;
@@ -32,22 +33,30 @@ public class UiRenderer {
 
     public void render(Batch batch, OrthographicCamera camera) {
 
-        Vector3 origin = camera.unproject(new Vector3(INVENTORY_MARGIN_LEFT, INVENTORY_MARGIN_TOP, 0));
+        Vector3 inventoryOrigin = camera.unproject(new Vector3(INVENTORY_MARGIN_LEFT, INVENTORY_MARGIN_TOP, 0));
+        Vector3 panelOrigin = camera.unproject(new Vector3(PANEL_MARGIN_LEFT, PANEL_MARGIN_TOP, 0));
+
         batch.begin();
 
+        int selectedCellIndex = hero.getPanel().getSelectedIndex();
         for (int i = 0; i < PANEL_SIZE; i++) {
             batch.draw(SpriteHolder.inventoryCell,
-                    origin.x + i * (2 + 0.1f),
-                    origin.y,
+                    panelOrigin.x + i * (2 + 0.1f),
+                    panelOrigin.y,
                     2, 2);
+            if (i == selectedCellIndex)
+                batch.draw(UISpriteHolder.panelSelectedCell,
+                        panelOrigin.x + i * (2 + 0.1f),
+                        panelOrigin.y,
+                        2, 2);
         }
 
         if (isShowingInventory) {
             for (int i = 0; i < INVENTORY_SIZE_HEIGHT; i++)
                 for (int j = 0; j < INVENTORY_SIZE_WIDTH; j++) {
                     batch.draw(SpriteHolder.inventoryCell,
-                            origin.x + j * (2 + 0.1f),
-                            origin.y + i * (2 + 0.1f),
+                            inventoryOrigin.x + j * (2 + 0.1f),
+                            inventoryOrigin.y + i * (2 + 0.1f),
                             2, 2);
                 }
 
@@ -56,8 +65,8 @@ public class UiRenderer {
             for (Collectible item : hero.getInventory().getData()) {
                 if (item != null) {
                     batch.draw(SpriteHolder.getTexture(item.getId()),
-                            origin.x + j * (2 + 0.1f),
-                            origin.y + i * (2 + 0.1f),
+                            inventoryOrigin.x + j * (2 + 0.1f),
+                            inventoryOrigin.y + i * (2 + 0.1f),
                             2, 2);
 
                     j++;

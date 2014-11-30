@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import ru.vsu.csf.twopeoplestudios.Values;
 import ru.vsu.csf.twopeoplestudios.model.world.MapTile;
 import ru.vsu.csf.twopeoplestudios.model.world.World;
 
@@ -54,7 +55,7 @@ public class MapTestScreen extends AbstractScreen {
                 new InputAdapter() {
                     @Override
                     public boolean mouseMoved(int screenX, int screenY) {
-                        screenY = AbstractScreen.SCREEN_HEIGHT - screenY;
+                        screenY = Values.SCREEN_HEIGHT - screenY;
                         mousePos = new Vector2(screenX, screenY);
                         return true;
                     }

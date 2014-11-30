@@ -2,7 +2,7 @@ package ru.vsu.csf.twopeoplestudios.model.collectibles;
 
 public class Inventory {
 
-    private Collectible[] data;
+    protected Collectible[] data;
 
     public Collectible[] getData() {
         return data;

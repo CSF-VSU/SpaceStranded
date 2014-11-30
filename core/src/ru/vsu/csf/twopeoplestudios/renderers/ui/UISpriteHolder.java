@@ -1,8 +1,10 @@
 package ru.vsu.csf.twopeoplestudios.renderers.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
@@ -15,7 +17,9 @@ public class UISpriteHolder {
 
     public static TextButton.TextButtonStyle textButtonStyle;
 
-    public UISpriteHolder() {
+    public static TextureRegion panelSelectedCell;
+
+    public static void init() {
         atlas = new TextureAtlas(Gdx.files.internal("gfx/ui/button.pack")); //класс для загрузки текстурных паков - здеся атласы
         skin = new Skin(atlas); //считай, стиль. Применяется к разным UI-элементам
 
@@ -28,5 +32,11 @@ public class UISpriteHolder {
             pressedOffsetY = -2;
             font = font32;
         }};
+
+        panelSelectedCell = new TextureRegion(new Texture(Gdx.files.internal("gfx/ui/panel_cell_selection.png")));
+    }
+
+    private UISpriteHolder() {
+
     }
 }

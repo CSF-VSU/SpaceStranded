@@ -10,7 +10,10 @@ public class SpriteHolder {
     public static TextureRegion inventoryCell;
     public static ArrayList<TextureRegion> textures;
 
-    public SpriteHolder() {
+    private SpriteHolder() {
+    }
+
+    public static void init() {
         inventoryCell = new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/water.png")));
         textures = new ArrayList<TextureRegion>();
         textures.add(0, new TextureRegion(new Texture(Gdx.files.internal("gfx/herbs/0.png"))));

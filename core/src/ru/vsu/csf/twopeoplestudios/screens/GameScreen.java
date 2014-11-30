@@ -61,4 +61,8 @@ public class GameScreen extends AbstractScreen {
     public void hideInventory() {
         uiRenderer.setShowingInventory(false);
     }
+
+    public void panelCellSelect(int index) {
+        renderer.map.hero.getPanel().selectItem(index);
+    }
 }

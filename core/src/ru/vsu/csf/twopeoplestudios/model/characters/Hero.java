@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.Panel;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
@@ -31,6 +32,7 @@ public class Hero {
     Inventory inventory;
     GameScreen gameScreen; //to call show/hide inventory
     boolean isShowingInventory;
+    Panel panel;
 
     Herb herbUnderFeet;
     //endregion
@@ -41,6 +43,10 @@ public class Hero {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public Panel getPanel() {
+        return panel;
     }
 
     //region Creating
@@ -59,6 +65,7 @@ public class Hero {
         herbUnderFeet = null;
         inventory = new Inventory();
         isShowingInventory = false;
+        panel = new Panel();
     }
 
     public void initGameScreen(GameScreen screen) {
@@ -193,6 +200,37 @@ public class Hero {
                     gameScreen.hideInventory();
                 }
                 break;
+            case '1':
+                gameScreen.panelCellSelect(1);
+                break;
+            case '2':
+                gameScreen.panelCellSelect(2);
+                break;
+            case '3':
+                gameScreen.panelCellSelect(3);
+                break;
+            case '4':
+                gameScreen.panelCellSelect(4);
+                break;
+            case '5':
+                gameScreen.panelCellSelect(5);
+                break;
+            case '6':
+                gameScreen.panelCellSelect(6);
+                break;
+            case '7':
+                gameScreen.panelCellSelect(7);
+                break;
+            case '8':
+                gameScreen.panelCellSelect(8);
+                break;
+            case '9':
+                gameScreen.panelCellSelect(9);
+                break;
+            case '0':
+                gameScreen.panelCellSelect(0);
+                break;
+
         }
     }
     //endregion

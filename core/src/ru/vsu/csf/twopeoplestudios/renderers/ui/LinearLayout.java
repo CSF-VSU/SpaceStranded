@@ -1,7 +1,7 @@
 package ru.vsu.csf.twopeoplestudios.renderers.ui;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import ru.vsu.csf.twopeoplestudios.screens.AbstractScreen;
+import ru.vsu.csf.twopeoplestudios.Values;
 
 import java.util.ArrayList;
 
@@ -50,10 +50,10 @@ public class LinearLayout {
     public LinearLayout addButton(Button button) {
         switch (orientation) {
             case VERTICAL:
-                button.setPosition(marginLeft, AbstractScreen.SCREEN_HEIGHT - marginTop - (BUTTON_HEIGHT + padding) * buttons.size());
+                button.setPosition(marginLeft, Values.SCREEN_HEIGHT - marginTop - (BUTTON_HEIGHT + padding) * buttons.size());
                 break;
             case HORIZONTAL:
-                button.setPosition(marginLeft + (BUTTON_WIDTH + padding) * buttons.size(), AbstractScreen.SCREEN_HEIGHT - marginTop);
+                button.setPosition(marginLeft + (BUTTON_WIDTH + padding) * buttons.size(), Values.SCREEN_HEIGHT - marginTop);
                 break;
         }
         buttons.add(button);
