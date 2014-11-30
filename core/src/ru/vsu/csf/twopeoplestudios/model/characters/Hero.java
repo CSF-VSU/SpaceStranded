@@ -29,6 +29,10 @@ public class Hero {
     Map map;
     Body body;
 
+    float hp;
+    float hunger;
+    float stamina;
+
     Inventory inventory;
     GameScreen gameScreen; //to call show/hide inventory
     boolean isShowingInventory;
@@ -36,6 +40,19 @@ public class Hero {
 
     Herb herbUnderFeet;
     //endregion
+
+    //region Getters/Setters
+    public float getHp() {
+        return hp;
+    }
+
+    public float getHunger() {
+        return hunger;
+    }
+
+    public float getStamina() {
+        return stamina;
+    }
 
     public Vector2 getPosition() {
         return body.getPosition();
@@ -48,6 +65,7 @@ public class Hero {
     public Panel getPanel() {
         return panel;
     }
+    //endregion
 
     //region Creating
     public Hero(World world, Map map) {
@@ -61,6 +79,10 @@ public class Hero {
         this.world = world;
         this.map = map;
         createBody();
+
+        hp = 100;
+        hunger = 100;
+        stamina = 100;
 
         herbUnderFeet = null;
         inventory = new Inventory();
@@ -226,6 +248,7 @@ public class Hero {
 
     private void collectHerb() {
         if (this.inventory.tryToPut(herbUnderFeet)) {
+            stamina -= 15;
             map.destroyHerb(herbUnderFeet);
             herbUnderFeet = null;
         }

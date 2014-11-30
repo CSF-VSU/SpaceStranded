@@ -64,13 +64,13 @@ public class UISpriteHolder {
         }};
         progressBarHeroHGStyle = new ProgressBar.ProgressBarStyle() {{
             background = skinHeroStatsPrgBar.getDrawable("state_progress_bar_empty");
-            knobBefore = skinHeroStatsPrgBar.getDrawable("state_progress_bar_green");
+            knobBefore = skinHeroStatsPrgBar.getDrawable("state_progress_bar_yellow");
             background.setMinHeight(HERO_STAT_PROGRESS_BAR_HEIGHT);
             knobBefore.setMinHeight(HERO_STAT_PROGRESS_BAR_HEIGHT);
         }};
         progressBarHeroSTStyle = new ProgressBar.ProgressBarStyle() {{
             background = skinHeroStatsPrgBar.getDrawable("state_progress_bar_empty");
-            knobBefore = skinHeroStatsPrgBar.getDrawable("state_progress_bar_yellow");
+            knobBefore = skinHeroStatsPrgBar.getDrawable("state_progress_bar_green");
             background.setMinHeight(HERO_STAT_PROGRESS_BAR_HEIGHT);
             knobBefore.setMinHeight(HERO_STAT_PROGRESS_BAR_HEIGHT);
         }};
