@@ -14,9 +14,9 @@ import java.util.ArrayList;
 
 public class MapTestScreen extends AbstractScreen {
 
-    private static final int TILE_SIZE = 1;
+    private static final int TILE_SIZE = 4;
     private static final int MARGIN_LEFT = 128;
-    private static final int MARGIN_BOTTOM = 0;
+    private static final int MARGIN_BOTTOM = 100;
 
     private TextureRegion water;
     private ArrayList<TextureRegion> lands;
@@ -100,9 +100,14 @@ public class MapTestScreen extends AbstractScreen {
                             break;
                         default:
                             if (map[i][j].height >= lands.size())
-                                cameraBatch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                batch.draw(lands.get(12), i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             else {
-                                cameraBatch.draw(lands.get(map[i][j].height), i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                int index = map[i][j].height;
+                                if (index >= lands.size()) {
+                                    batch.draw(lands.get(12), i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                }
+                                else
+                                    batch.draw(lands.get(index), i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             }
                             break;
                     }
