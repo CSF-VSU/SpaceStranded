@@ -1,5 +1,8 @@
 package ru.vsu.csf.twopeoplestudios.model.world;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class World {
 
     public int size;
@@ -8,7 +11,8 @@ public class World {
     public MapTile[][] firstMapPart;
     public MapTile[][] secondMapPart;
     public MapTile[][] middleMapPart;
-    public MapTile[][] borderMapPart;
+    public MapEdge[][] edges;
+    //public MapTile[][] borderMapPart;
 
     public int height;
 
@@ -16,6 +20,7 @@ public class World {
 
         size = 128;
         map = new MapTile[2*size][size];
+        edges = new MapEdge[2*size][2*size];
         /*for (int i = 0; i < 2*size; i++)
             for (int j = 0; j < size; j++)
                 map[i][j] = new MapTile();*/
@@ -31,10 +36,10 @@ public class World {
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
                 middleMapPart[i][j] = new MapTile();
-        borderMapPart = new MapTile[size][size];
+        /*borderMapPart = new MapTile[size][size];
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
-                borderMapPart[i][j] = new MapTile();
+                borderMapPart[i][j] = new MapTile();*/
 
         setCell(firstMapPart, 0, 0, TerrainType.WATER);
         setCell(firstMapPart, size / 2, 0, TerrainType.WATER);
@@ -51,15 +56,15 @@ public class World {
         setCell(middleMapPart, 0, size / 2, TerrainType.WATER);
         setCell(middleMapPart, size / 2, size / 2, TerrainType.GROUND);
 
-        setCell(borderMapPart, 0, 0, TerrainType.WATER);
+        /*setCell(borderMapPart, 0, 0, TerrainType.WATER);
         setCell(borderMapPart, size / 2, 0, TerrainType.WATER);
         setCell(borderMapPart, 0, size / 2, TerrainType.WATER);
-        setCell(borderMapPart, size / 2, size / 2, TerrainType.GROUND);
+        setCell(borderMapPart, size / 2, size / 2, TerrainType.GROUND);*/
 
         makeFractal(firstMapPart, size / 4);
         makeFractal(secondMapPart, size / 4);
         makeFractal(middleMapPart, size / 4);
-        makeFractal(borderMapPart, size / 4);
+        //makeFractal(borderMapPart, size / 4);
 
 
         for (int i  = 0; i < size; i++)
@@ -90,33 +95,6 @@ public class World {
                         map[i][j].type = TerrainType.GROUND;
                 }
             }*/
-        /*for (int i = 0; i < size/2; i++)
-            for (int j = 0; j < size; j++) {
-                if ((firstMapPart[i][j].type == TerrainType.WATER) &&
-                    (borderMapPart[size / 2 + i][j].type == TerrainType.WATER))
-                    map[i][j].type = TerrainType.WATER;
-                else
-                    map[i][j].type = TerrainType.GROUND;
-
-                if ((firstMapPart[size/2 + i][j].type == TerrainType.WATER) &&
-                    (middleMapPart[i][j].type == TerrainType.WATER))
-                    map[size/2 + i][j].type = TerrainType.WATER;
-                else
-                    map[size/2 + i][j].type = TerrainType.GROUND;
-
-                if ((secondMapPart[i][j].type == TerrainType.WATER) &&
-                   (middleMapPart[size/2 + i][j].type == TerrainType.WATER))
-                    map[size+i][j].type = TerrainType.WATER;
-                else
-                    map[size+i][j].type = TerrainType.GROUND;
-
-                if ((secondMapPart[size/2+i][j].type == TerrainType.WATER) &&
-                    (borderMapPart[i][j].type == TerrainType.WATER))
-                    map[3/2 * size + i][j].type = TerrainType.WATER;
-                else
-                    map[3/2 * size + i][j].type = TerrainType.GROUND;
-            }*/
-
 
         for (int i = 0; i < 2*size; i++)
             for (int j = 0; j < size; j++)
@@ -130,10 +108,17 @@ public class World {
             for (int i = 0; i < 2*size; i++)
                 for (int j = 0; j < size; j++)
                     if (checkHeight(i, j, height)) {
-                        setCell(map, i, j, TerrainType.SAND); //песок сгенерирован
+                        setCell(map, i, j, TerrainType.SAND);
                         map[i][j].height = height;
                     }
         }
+        for (int i = 0; i < 2*size; i++)
+            for (int j = 0; j < size; j++)
+                if (!(map[i][j].type == TerrainType.WATER))
+                    if (map[i][j].height == 1)
+                        map[i][j].type = TerrainType.SAND;
+                    else
+                        map[i][j].type = TerrainType.GROUND;
     }
 
 
@@ -181,12 +166,20 @@ public class World {
         if (step > 1) makeFractal(mapPart, step / 2);
     }
 
-
-    /*public static boolean isNearWater (int i, int j) {
-        return (map[i][j].type == TerrainType.GROUND) &&
-               ((i - 1 >= 0) && (map[i-1][j].type == TerrainType.WATER) ||
-               (i + 1 < size) && (map[i+1][j].type == TerrainType.WATER) ||
-               (j - 1 >= 0) && (map[i][j-1].type == TerrainType.WATER) ||
-               (j + 1 < size) && (map[i][j+1].type == TerrainType.WATER));
-    }*/
+    public List<Integer> getTilesFromEdge(int x, int y) {
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        if (x % 2 == 0) { //ребро горизонтальное
+            res.add(x / 2 - 1);
+            res.add(y);
+            res.add(x / 2);
+            res.add(y);
+        }
+        else { //ребро вертикальное
+            res.add(x / 2);
+            res.add(y - 1);
+            res.add(x / 2);
+            res.add(y);
+        }
+        return res;
+    }
 }
