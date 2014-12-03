@@ -26,12 +26,12 @@ public class GameStage extends Stage {
 
     public GameStage(Hero hero) {
         this.hero = hero;
-        setDebugAll(true);
+        //setDebugAll(true);
         mainTable = new Table() {{
             //setBounds(310, Values.SCREEN_HEIGHT - 200 + 75, 505, 100);
             setBounds(0, 0, Values.SCREEN_WIDTH, Values.SCREEN_HEIGHT);
             //setFillParent(true);
-            setDebug(true);
+            //setDebug(true);
         }};
         /*inventoryTable = new Table() {{
             setBounds(300, 330, 650+15, 65*4+20);

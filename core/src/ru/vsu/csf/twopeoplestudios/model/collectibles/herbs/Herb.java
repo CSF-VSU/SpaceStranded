@@ -11,10 +11,10 @@ public class Herb extends Collectible {
     protected Vector2 position;
     protected Body body;
 
-    public Herb(int id, Vector2 position, World world) {
-        this.id = id;
+    public Herb(int id, int count, Vector2 position, World world) {
+        super(id, count);
+
         this.position = position;
-        this.count = 1;
 
         BodyDef bodyDef = new BodyDef() {{
             type = BodyType.KinematicBody;

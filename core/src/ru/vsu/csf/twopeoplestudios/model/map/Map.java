@@ -21,12 +21,12 @@ public class Map {
         this.world = world;
         hero = new Hero(world, this);
         herbs = new LinkedList<Herb>() {{
-            add(new Herb(0, new Vector2(4, 4), world));
-            add(new Herb(0, new Vector2(-2, -2), world));
-            add(new Herb(1, new Vector2(-3, 5), world));
-            add(new Herb(1, new Vector2(6, -2), world));
-            add(new Herb(2, new Vector2(-4, -4), world));
-            add(new Herb(2, new Vector2(-6, -8), world));
+            add(new Herb(0, 1, new Vector2(4, 4), world));
+            add(new Herb(0, 1, new Vector2(-2, -2), world));
+            add(new Herb(1, 1, new Vector2(-3, 5), world));
+            add(new Herb(1, 1, new Vector2(6, -2), world));
+            add(new Herb(2, 1, new Vector2(-4, -4), world));
+            add(new Herb(2, 1, new Vector2(-6, -8), world));
         }};
         toDestroy = new LinkedList<Body>();
     }

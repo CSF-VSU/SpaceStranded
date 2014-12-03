@@ -3,6 +3,7 @@ package ru.vsu.csf.twopeoplestudios.model.characters;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Panel;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
@@ -88,6 +89,12 @@ public class Hero {
         inventory = new Inventory();
         isShowingInventory = false;
         panel = new Panel();
+
+        inventory.tryToPut(new Collectible(100,5));
+        inventory.tryToPut(new Collectible(101,5));
+        inventory.tryToPut(new Collectible(102,5));
+        inventory.tryToPut(new Collectible(103,5));
+
     }
 
     public void initGameScreen(GameScreen screen) {
