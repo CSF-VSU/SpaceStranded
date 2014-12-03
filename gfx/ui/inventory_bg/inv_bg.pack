@@ -1,0 +1,13 @@
+
+inv_bg.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+interface_pan
+  rotate: false
+  xy: 0, 0
+  size: 180, 180
+  split: 1, 1, 1, 1
+  orig: 180, 180
+  offset: 0, 0
+  index: -1
