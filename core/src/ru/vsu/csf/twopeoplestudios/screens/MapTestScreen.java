@@ -19,6 +19,7 @@ public class MapTestScreen extends AbstractScreen {
     private static final int MARGIN_BOTTOM = 100;
 
     private TextureRegion water;
+    private TextureRegion sand;
     private ArrayList<TextureRegion> lands;
 
     private final World world = new World();
@@ -72,6 +73,7 @@ public class MapTestScreen extends AbstractScreen {
         );
 
         water = new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/water.png")));
+        sand = new TextureRegion(new Texture(Gdx.files.internal("gfx/tiles/beachbitch.png")));
 
         lands = new ArrayList<TextureRegion>() {{
             for (int i = 0; i < 13; i++)
@@ -87,7 +89,7 @@ public class MapTestScreen extends AbstractScreen {
         super.render(delta);
 
         if (!isCreatingWorld) {
-            cameraBatch.begin();
+            uiBatch.begin();
             MapTile[][] map = world.map;
             int width = world.map.length;
             int height = world.map[0].length;
@@ -95,25 +97,43 @@ public class MapTestScreen extends AbstractScreen {
             for (int j = 0; j < height; j++) {
                 for (int i = 0; i < width; i++) {
                     switch (map[i][j].type) {
+                        case SAND:
+                            uiBatch.draw(sand,
+                                    i * TILE_SIZE + MARGIN_LEFT,
+                                    j * TILE_SIZE + MARGIN_BOTTOM,
+                                    TILE_SIZE, TILE_SIZE);
+                            break;
                         case WATER:
-                            cameraBatch.draw(water, i * TILE_SIZE + MARGIN_LEFT, j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                            uiBatch.draw(water,
+                                    i * TILE_SIZE + MARGIN_LEFT,
+                                    j * TILE_SIZE + MARGIN_BOTTOM,
+                                    TILE_SIZE, TILE_SIZE);
                             break;
                         default:
                             if (map[i][j].height >= lands.size())
-                                batch.draw(lands.get(12), i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                uiBatch.draw(lands.get(12),
+                                        i * TILE_SIZE + MARGIN_LEFT,
+                                        j * TILE_SIZE + MARGIN_BOTTOM,
+                                        TILE_SIZE, TILE_SIZE);
                             else {
                                 int index = map[i][j].height;
                                 if (index >= lands.size()) {
-                                    batch.draw(lands.get(12), i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                    uiBatch.draw(lands.get(12),
+                                            i * TILE_SIZE + MARGIN_LEFT,
+                                            j * TILE_SIZE + MARGIN_BOTTOM,
+                                            TILE_SIZE, TILE_SIZE);
                                 }
                                 else
-                                    batch.draw(lands.get(index), i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                                    uiBatch.draw(lands.get(index),
+                                            i * TILE_SIZE + MARGIN_LEFT,
+                                            j * TILE_SIZE + MARGIN_BOTTOM,
+                                            TILE_SIZE, TILE_SIZE);
                             }
                             break;
                     }
                 }
             }
-            cameraBatch.end();
+            uiBatch.end();
         }
     }
 }

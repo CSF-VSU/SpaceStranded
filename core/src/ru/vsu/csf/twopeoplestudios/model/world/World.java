@@ -2,8 +2,11 @@ package ru.vsu.csf.twopeoplestudios.model.world;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class World {
+
+    private static Random random;
 
     public int size;
 
@@ -17,7 +20,7 @@ public class World {
     public int height;
 
     public void create() {
-
+        random = new Random();
         size = 128;
         map = new MapTile[2*size][size];
         edges = new MapEdge[2*size][2*size];
@@ -115,8 +118,14 @@ public class World {
         for (int i = 0; i < 2*size; i++)
             for (int j = 0; j < size; j++)
                 if (!(map[i][j].type == TerrainType.WATER))
-                    if (map[i][j].height == 1)
+                    if (map[i][j].height == 1 || map[i][j].height == 0)
                         map[i][j].type = TerrainType.SAND;
+                    else if (map[i][j].height == 2) {
+                        if (random.nextInt(2) == 1)
+                            map[i][j].type = TerrainType.SAND;
+                        else
+                            map[i][j].type = TerrainType.GROUND;
+                    }
                     else
                         map[i][j].type = TerrainType.GROUND;
     }
