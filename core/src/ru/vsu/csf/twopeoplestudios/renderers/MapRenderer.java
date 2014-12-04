@@ -26,7 +26,7 @@ import ru.vsu.csf.twopeoplestudios.model.world.MapTile;
 
 public class MapRenderer {
 
-    private static final int CELL_SIZE = 32;
+    private static final int CELL_SIZE = 64;
 
     public Map map;
 
@@ -57,7 +57,7 @@ public class MapRenderer {
         tiledMap = new TiledMap();
         int mapWidth = mapScheme.length;
         int mapHeight = mapScheme[0].length;
-        TextureRegion water = new TextureRegion(new Texture(new FileHandle("gfx/tiles/wateer.png")));
+        TextureRegion water = new TextureRegion(new Texture(new FileHandle("gfx/tiles/water.png")));
         TextureRegion land = new TextureRegion(new Texture(new FileHandle("gfx/tiles/grass.png")));
         TextureRegion sand = new TextureRegion(new Texture(new FileHandle("gfx/tiles/sand.png")));
 
@@ -65,7 +65,7 @@ public class MapRenderer {
         TiledMapTile landTile = new StaticTiledMapTile(land);
         TiledMapTile sandTile = new StaticTiledMapTile(sand);
 
-        TiledMapTileLayer layer = new TiledMapTileLayer(128, 64, 32, 32);
+        TiledMapTileLayer layer = new TiledMapTileLayer(128, 64, 64, 64);
         MapLayers layers = tiledMap.getLayers();
 
         for (int i = 0; i < mapWidth; i++)
