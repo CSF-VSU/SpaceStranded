@@ -8,15 +8,18 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.Items;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbStorage;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.WorldContactListener;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
 
 public class MapRenderer {
 
     public Map map;
-    HerbStorage herbStorage;
+
+    Items items;
+    Herbs herbs;
 
     private Box2DDebugRenderer debugRenderer;
     public OrthographicCamera camera;
@@ -31,8 +34,9 @@ public class MapRenderer {
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new WorldContactListener());
 
-        herbStorage = HerbStorage.getInstance();
+        //herbs = Herbs.getInstance();
         map = new Map(world);
+        items = Items.getInstance();
 
         heroTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/hero.png")));
     }
@@ -47,7 +51,7 @@ public class MapRenderer {
         map.update(delta);
 
         for (Herb h : map.herbs) {
-            batch.draw(SpriteHolder.getTexture(h.getId()), h.getPosition().x, h.getPosition().y, 1.5f, 1.5f);
+            batch.draw(items.getItemTexture(h.getId()), h.getPosition().x, h.getPosition().y, 1.5f, 1.5f);
         }
 
         batch.draw(heroTexture, map.hero.getPosition().x - 0.5f, map.hero.getPosition().y - 0.5f, 1.7f, 18 * 1.7f / 11f);

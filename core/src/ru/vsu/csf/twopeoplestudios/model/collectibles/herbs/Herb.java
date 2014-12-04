@@ -14,6 +14,7 @@ public class Herb extends Collectible {
     public Herb(int id, Vector2 position, World world) {
         this.id = id;
         this.position = position;
+        this.count = 1;
 
         BodyDef bodyDef = new BodyDef() {{
             type = BodyType.KinematicBody;

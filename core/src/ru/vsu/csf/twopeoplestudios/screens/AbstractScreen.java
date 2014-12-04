@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import ru.vsu.csf.twopeoplestudios.renderers.SpriteHolder;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 
 public class AbstractScreen implements Screen {
@@ -32,7 +31,6 @@ public class AbstractScreen implements Screen {
     @Override
     public void show() {
         UISpriteHolder.init();
-        SpriteHolder.init();
     }
 
     @Override

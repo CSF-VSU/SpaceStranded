@@ -1,17 +1,22 @@
 package ru.vsu.csf.twopeoplestudios.model.collectibles.herbs;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import java.util.ArrayList;
 
-import java.util.HashSet;
+public class HerbInfo {
 
-public class HerbInfo extends Herb {
-    private String name;
-    private String description;
-    private HashSet<HerbProperties> properties;
+    int id;
+    ArrayList<HerbProperties> properties;
 
+    public HerbInfo(int id, ArrayList<HerbProperties> properties) {
+        this.id = id;
+        this.properties = properties;
+    }
 
-    public HerbInfo(int id, Vector2 position, World world) {
-        super(id, position, world);
+    public void setProperties(ArrayList<HerbProperties> properties) {
+        this.properties = properties;
+    }
+
+    public ArrayList<HerbProperties> getProperties() {
+        return properties;
     }
 }

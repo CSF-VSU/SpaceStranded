@@ -21,6 +21,15 @@ public class Inventory {
     }
 
     public boolean tryToPut(Collectible collectible) {
+        if (Items.getInstance().checkIfCountable(collectible.id)) {
+            for (Collectible c : data) {
+                if (c != null && c.id == collectible.id) {
+                    c.count += collectible.count;
+                    return true;
+                }
+            }
+        }
+
         int index = getEmptySlot();
         if (index == -1)
             return false;
