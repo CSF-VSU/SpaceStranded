@@ -1,27 +1,50 @@
 package ru.vsu.csf.twopeoplestudios.model.world;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class World {
 
+
+   private static World instance;
+  //TODO: set initial player pos;
+  //TODO: transfer map rendering to MapRenderer.java
+  //TODO: edit gamescreen
+
+   private World()
+   {
+       create();
+   }
+
+   public static synchronized World getInstance() {
+        if (instance == null) {
+            instance = new World();
+        }
+        return instance;
+   }
+
+
+
     private static Random random;
 
-    public int size;
+    //public int size;
 
     public MapTile[][] map;
     public MapTile[][] firstMapPart;
     public MapTile[][] secondMapPart;
     public MapTile[][] middleMapPart;
     public MapEdge[][] edges;
+    private int size = 64;
     //public MapTile[][] borderMapPart;
 
     public int height;
 
     public void create() {
         random = new Random();
-        size = 128;
+        //size = 64;
         map = new MapTile[2*size][size];
         edges = new MapEdge[2*size][2*size];
         /*for (int i = 0; i < 2*size; i++)
@@ -130,6 +153,17 @@ public class World {
                         map[i][j].type = TerrainType.GROUND;
     }
 
+    public Vector2 getRandomPosition() {
+        boolean ok = false;
+        Vector2 result = new Vector2();
+        do {
+            result = new Vector2(random.nextInt(2*size), random.nextInt(size));
+            if (map[(int)result.x][(int)result.y].type != TerrainType.WATER) {
+                ok = true;
+            }
+        } while (!ok);
+        return result;
+    }
 
     public void setCell(MapTile[][] mapPart, int x, int y, TerrainType value) {
         mapPart[x][y].type = value;

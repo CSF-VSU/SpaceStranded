@@ -2,7 +2,11 @@ package ru.vsu.csf.twopeoplestudios.model.characters;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+//import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Panel;
@@ -10,6 +14,7 @@ import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
+import ru.vsu.csf.twopeoplestudios.model.world.World;
 import ru.vsu.csf.twopeoplestudios.screens.GameScreen;
 
 public class Hero {
@@ -18,7 +23,7 @@ public class Hero {
     static final float RUN_SPEED = 25f;
 
     //region Declarations
-    Vector2 position;
+    Vector2 heroPosition;
     Vector2 velocity;
 
     boolean leftPressed;
@@ -26,7 +31,7 @@ public class Hero {
     boolean upPressed;
     boolean downPressed;
 
-    World world;
+    com.badlogic.gdx.physics.box2d.World world;
     Map map;
     Body body;
 
@@ -55,7 +60,7 @@ public class Hero {
         return stamina;
     }
 
-    public Vector2 getPosition() {
+    public Vector2 getHeroPosition() {
         return body.getPosition();
     }
 
@@ -69,8 +74,9 @@ public class Hero {
     //endregion
 
     //region Creating
-    public Hero(World world, Map map) {
-        position = new Vector2(0, 0);
+    public Hero(com.badlogic.gdx.physics.box2d.World world, Map map) {
+        //heroPosition = new Vector2(0, 0);
+        heroPosition = World.getInstance().getRandomPosition();
         velocity = new Vector2(0, 0);
         leftPressed = false;
         rightPressed = false;
@@ -104,7 +110,7 @@ public class Hero {
     private void createBody() {
         BodyDef bodyDef = new BodyDef() {{
             type = BodyType.DynamicBody; //динамическое = можно воздействовать на него силами или импульсами
-            position.set(0, 0);
+            position.set(heroPosition);
         }};
 
         body = world.createBody(bodyDef);

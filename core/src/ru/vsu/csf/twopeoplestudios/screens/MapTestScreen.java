@@ -22,7 +22,7 @@ public class MapTestScreen extends AbstractScreen {
     private TextureRegion sand;
     private ArrayList<TextureRegion> lands;
 
-    private final World world = new World();
+    private final World world = World.getInstance();
     private boolean isCreatingWorld = false;
     private final Runnable mapGen = new Runnable() {
         @Override
