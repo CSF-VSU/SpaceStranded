@@ -7,15 +7,19 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import ru.vsu.csf.twopeoplestudios.model.characters.effects.ActiveEffects;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Panel;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.KnownHerb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
 import ru.vsu.csf.twopeoplestudios.model.world.World;
 import ru.vsu.csf.twopeoplestudios.screens.GameScreen;
+
+import java.util.ArrayList;
 
 public class Hero {
 
@@ -45,6 +49,8 @@ public class Hero {
     Panel panel;
 
     Herb herbUnderFeet;
+    ArrayList<KnownHerb> knownHerbs;
+    ActiveEffects activeEffects;
     //endregion
 
     //region Getters/Setters
@@ -101,6 +107,8 @@ public class Hero {
         inventory.tryToPut(new Collectible(102,5));
         inventory.tryToPut(new Collectible(103,5));
 
+        knownHerbs = new ArrayList<KnownHerb>();
+        activeEffects = new ActiveEffects();
     }
 
     public void initGameScreen(GameScreen screen) {
