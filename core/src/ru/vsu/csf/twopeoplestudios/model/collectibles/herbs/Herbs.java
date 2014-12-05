@@ -6,7 +6,6 @@ public class Herbs {
 
     ArrayList<HerbInfo> herbs;
 
-
     private Herbs() {
         herbs = new ArrayList<HerbInfo>() {{
             add(new HerbInfo(0, new ArrayList<HerbProperties>() {{
@@ -20,5 +19,13 @@ public class Herbs {
                 add(HerbProperties.ST_UP);
             }}));
         }};
+    }
+
+    private static Herbs instance;
+
+    public static Herbs getInstance() {
+        if (instance != null)
+            instance = new Herbs();
+        return  instance;
     }
 }
