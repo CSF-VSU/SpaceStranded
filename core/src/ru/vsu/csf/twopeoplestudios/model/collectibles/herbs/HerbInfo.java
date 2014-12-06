@@ -5,18 +5,18 @@ import java.util.ArrayList;
 public class HerbInfo {
 
     int id;
-    ArrayList<HerbProperties> properties;
+    ArrayList<HerbProperty> properties;
 
-    public HerbInfo(int id, ArrayList<HerbProperties> properties) {
+    public HerbInfo(int id, ArrayList<HerbProperty> properties) {
         this.id = id;
         this.properties = properties;
     }
 
-    public void setProperties(ArrayList<HerbProperties> properties) {
+    public void setProperties(ArrayList<HerbProperty> properties) {
         this.properties = properties;
     }
 
-    public ArrayList<HerbProperties> getProperties() {
+    public ArrayList<HerbProperty> getProperties() {
         return properties;
     }
 }

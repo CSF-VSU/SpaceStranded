@@ -10,8 +10,7 @@ import ru.vsu.csf.twopeoplestudios.model.characters.effects.EffectSpriteHolder;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Items;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbInfo;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperties;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperty;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 import ru.vsu.csf.twopeoplestudios.screens.stages.GameStage;
@@ -23,7 +22,8 @@ public class UiRenderer {
 
     private static final float INVENTORY_MARGIN_LEFT = 220f;
     private static final float INVENTORY_MARGIN_BOTTOM = 350;
-    private static final DecimalFormat FORMAT = new DecimalFormat("###.#");
+    private static final DecimalFormat STATS_FORMAT = new DecimalFormat("###.#");
+    private static final DecimalFormat SECONDS_FORMAT = new DecimalFormat("###");
 
     private static final float PANEL_MARGIN_LEFT = (1280 - 700) / 2f;
     private static final float PANEL_MARGIN_BOTTOM = 0;
@@ -62,19 +62,19 @@ public class UiRenderer {
         stage.act();
         stage.draw();
 
-        //region Panel
         uiBatch.begin();
 
+        //region Panel
         UISpriteHolder.font32.draw(uiBatch,
-                FORMAT.format(hero.getHp()) + " / " + hero.getMaxHp(),
+                STATS_FORMAT.format(hero.getHp()) + " / " + hero.getMaxHp(),
                 475,
                 Values.SCREEN_HEIGHT - 30);
         UISpriteHolder.font32.draw(uiBatch,
-                FORMAT.format(hero.getHunger()) + " / " + hero.getMaxFl(),
+                STATS_FORMAT.format(hero.getHunger()) + " / " + hero.getMaxFl(),
                 475,
                 Values.SCREEN_HEIGHT - 30 - 33);
         UISpriteHolder.font32.draw(uiBatch,
-                FORMAT.format(hero.getStamina()) + " / " + hero.getMaxSt(),
+                STATS_FORMAT.format(hero.getStamina()) + " / " + hero.getMaxSt(),
                 475,
                 Values.SCREEN_HEIGHT - 30 - 2*33);
 
@@ -93,8 +93,10 @@ public class UiRenderer {
         }
         //endregion
 
+        //region Inventory
         if (isShowingInventory) {
-            for (int i = 0; i < Inventory.HEIGHT; i++)
+
+            for (int i = 0; i < Inventory.HEIGHT; i++) //cells
                 for (int j = 0; j < Inventory.WIDTH; j++) {
                     UISpriteHolder.inventoryCell.draw(uiBatch,
                             INVENTORY_MARGIN_LEFT + j * (INVENTORY_CELL_SIZE),
@@ -102,14 +104,14 @@ public class UiRenderer {
                             INVENTORY_CELL_SIZE, INVENTORY_CELL_SIZE);
                 }
 
-            UISpriteHolder.panelSelectedCell.draw(uiBatch,
+            UISpriteHolder.panelSelectedCell.draw(uiBatch, //selected cell
                     INVENTORY_MARGIN_LEFT + hero.getInventory().selectedColumn * (INVENTORY_CELL_SIZE),
                     INVENTORY_MARGIN_BOTTOM + hero.getInventory().selectedRow * (INVENTORY_CELL_SIZE),
                     INVENTORY_CELL_SIZE, INVENTORY_CELL_SIZE);
 
             int i = 0;
             int j = 0;
-            for (Collectible item : hero.getInventory().getData()) {
+            for (Collectible item : hero.getInventory().getData()) { //items
                 if (item != null) {
 
                     uiBatch.draw(Items.getInstance().getItemTexture(item.getId()),
@@ -129,10 +131,8 @@ public class UiRenderer {
                     }
                 }
             }
-            //endregion
 
             //region Info subpanel
-
             float x = INVENTORY_MARGIN_LEFT + Inventory.WIDTH * INVENTORY_CELL_SIZE;
             UISpriteHolder.inventoryCell.draw(uiBatch,
                     x,
@@ -169,7 +169,7 @@ public class UiRenderer {
                                 50, 50);
                     }
 
-                    ArrayList<HerbProperties> knownProps = hero.getKnownPropertiesOfHerb(item.getId());
+                    ArrayList<HerbProperty> knownProps = hero.getKnownPropertiesOfHerb(item.getId());
                     if (knownProps != null)
                         for (int knownPropCnt = 0; knownPropCnt < knownProps.size(); knownPropCnt++) {
                             uiBatch.draw(EffectSpriteHolder.getInstance().getTexture(knownProps.get(knownPropCnt)),
@@ -182,6 +182,21 @@ public class UiRenderer {
 
             //endregion
         }
+        //endregion
+
+        //region Buffs
+        for (int buffCnt = 0; buffCnt < hero.getActiveEffects().size(); buffCnt++) {
+            uiBatch.draw(EffectSpriteHolder.getInstance().getTexture(hero.getActiveEffects().get(buffCnt).property),
+                    UISpriteHolder.portraitPanel.getRegionWidth() + 40 + buffCnt*50,
+                    Values.SCREEN_HEIGHT - 60,
+                    40, 40);
+
+            UISpriteHolder.font32.draw(uiBatch,
+                    SECONDS_FORMAT.format(hero.getActiveEffects().get(buffCnt).duration) + "s",
+                    UISpriteHolder.portraitPanel.getRegionWidth() + 40 + buffCnt*50,
+                    Values.SCREEN_HEIGHT - 80);
+        }
+        //endregion
 
         uiBatch.end();
     }

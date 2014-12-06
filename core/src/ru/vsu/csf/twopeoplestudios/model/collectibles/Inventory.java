@@ -1,8 +1,7 @@
 package ru.vsu.csf.twopeoplestudios.model.collectibles;
 
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
-import ru.vsu.csf.twopeoplestudios.model.characters.effects.Effect;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperties;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperty;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 
 public class Inventory extends Panel {
@@ -41,7 +40,7 @@ public class Inventory extends Panel {
 
             hero.revealHerbProperties(item.getId());
 
-            for (HerbProperties property : Herbs.getInstance().getPropertiesOfHerb(item.id)) {
+            for (HerbProperty property : Herbs.getInstance().getPropertiesOfHerb(item.id)) {
                 hero.addActiveEffect(property.getEffect());
             }
 

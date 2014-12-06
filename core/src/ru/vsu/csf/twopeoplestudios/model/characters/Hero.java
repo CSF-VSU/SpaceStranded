@@ -12,7 +12,7 @@ import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Panel;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperties;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperty;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.KnownHerb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
@@ -65,6 +65,12 @@ public class Hero {
     //endregion
 
     //region Getters/Setters
+
+
+    public ArrayList<Effect> getActiveEffects() {
+        return activeEffects;
+    }
+
     public float getHp() {
         return hp;
     }
@@ -163,6 +169,9 @@ public class Hero {
         inventory.tryToPut(new Collectible(101,5));
         inventory.tryToPut(new Collectible(102,5));
         inventory.tryToPut(new Collectible(103,5));
+        inventory.tryToPut(new Collectible(0,5));
+        inventory.tryToPut(new Collectible(1,5));
+        inventory.tryToPut(new Collectible(2,5));
 
         knownHerbs = new ArrayList<KnownHerb>();
         activeEffects = new ArrayList<Effect>();
@@ -238,6 +247,19 @@ public class Hero {
         //endregion
 
         regen(delta);
+        activeEffectsUpdate(delta);
+    }
+
+    private void activeEffectsUpdate(float delta) {
+
+        for (int i = 0; i < activeEffects.size(); i++){
+            activeEffects.get(i).duration -= delta;
+
+            if (activeEffects.get(i).duration < 0) {
+                activeEffects.get(i).onDetach(this);
+                activeEffects.remove(i);
+            }
+        }
     }
 
     private void regen(float delta) {
@@ -369,7 +391,7 @@ public class Hero {
             knownHerbs.add(new KnownHerb(id, Herbs.getInstance().getPropertiesOfHerb(id)));
     }
 
-    public ArrayList<HerbProperties> getKnownPropertiesOfHerb(int id) {
+    public ArrayList<HerbProperty> getKnownPropertiesOfHerb(int id) {
         KnownHerb h = getKnownHerbWithId(id);
         return (h != null) ? h.properties : null;
     }

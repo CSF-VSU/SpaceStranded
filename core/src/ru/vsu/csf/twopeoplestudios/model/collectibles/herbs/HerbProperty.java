@@ -3,11 +3,12 @@ package ru.vsu.csf.twopeoplestudios.model.collectibles.herbs;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
 import ru.vsu.csf.twopeoplestudios.model.characters.effects.Effect;
 
-public enum HerbProperties {
+public enum HerbProperty {
 
     HP_UP (new Effect() {
         @Override
         public void onAttach(Hero hero) {
+            property = HP_UP;
             hero.increaseMaxHp(10);
         }
 
@@ -19,6 +20,7 @@ public enum HerbProperties {
     HP_DOWN (new Effect() {
         @Override
         public void onAttach(Hero hero) {
+            property = HP_DOWN;
             hero.decreaseMaxHp(10);
         }
 
@@ -31,6 +33,7 @@ public enum HerbProperties {
     FL_UP (new Effect() {
         @Override
         public void onAttach(Hero hero) {
+            property = FL_UP;
             hero.increaseMaxFl(10);
         }
 
@@ -42,6 +45,7 @@ public enum HerbProperties {
     FL_DOWN (new Effect() {
         @Override
         public void onAttach(Hero hero) {
+            property = FL_DOWN;
             hero.decreaseMaxFl(10);
         }
 
@@ -54,6 +58,7 @@ public enum HerbProperties {
     ST_UP  (new Effect() {
         @Override
         public void onAttach(Hero hero) {
+            property = ST_UP;
             hero.increaseMaxSt(10);
         }
 
@@ -65,6 +70,7 @@ public enum HerbProperties {
     ST_DOWN (new Effect() {
         @Override
         public void onAttach(Hero hero) {
+            property = ST_DOWN;
             hero.decreaseMaxSt(10);
         }
 
@@ -77,7 +83,7 @@ public enum HerbProperties {
 
     private final Effect effect;
 
-    HerbProperties(Effect effect) {
+    HerbProperty(Effect effect) {
         this.effect = effect;
     }
 

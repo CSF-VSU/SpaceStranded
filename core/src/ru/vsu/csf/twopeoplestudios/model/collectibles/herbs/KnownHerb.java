@@ -5,11 +5,11 @@ import java.util.List;
 
 public class KnownHerb {
     public int id;
-    public ArrayList<HerbProperties> properties;
+    public ArrayList<HerbProperty> properties;
 
-    public KnownHerb(int id, final List<HerbProperties> properties) {
+    public KnownHerb(int id, final List<HerbProperty> properties) {
         this.id = id;
-        this.properties = new ArrayList<HerbProperties>() {{
+        this.properties = new ArrayList<HerbProperty>() {{
             addAll(properties);
         }};
     }
