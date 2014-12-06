@@ -1,17 +1,21 @@
 package ru.vsu.csf.twopeoplestudios.screens.stages;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import ru.vsu.csf.twopeoplestudios.SpaceStranded;
 import ru.vsu.csf.twopeoplestudios.Values;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
+import ru.vsu.csf.twopeoplestudios.renderers.UiRenderer;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 
 public class GameStage extends Stage {
 
     private Hero hero;
+    private UiRenderer uiRenderer;
 
     private Table mainTable;
     private Table inventoryTable;
@@ -24,8 +28,10 @@ public class GameStage extends Stage {
 
     private Image inventoryBg;
 
-    public GameStage(Hero hero) {
+    public GameStage(Hero hero, UiRenderer uiRenderer) {
         this.hero = hero;
+        this.uiRenderer = uiRenderer;
+
         //setDebugAll(true);
         mainTable = new Table() {{
             //setBounds(310, Values.SCREEN_HEIGHT - 200 + 75, 505, 100);
@@ -82,12 +88,20 @@ public class GameStage extends Stage {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        boolean interfaceElementClicked = super.touchDown(screenX, screenY, pointer, button);
-        if (interfaceElementClicked)
-            return true;
 
-        //todo:
-        return false;
+        switch (button) {
+            case Input.Buttons.LEFT:
+                if (hero.isShowingInventory()) {
+                    uiRenderer.onClick(screenX, Values.SCREEN_HEIGHT - screenY);
+                }
+                break;
+            case Input.Buttons.RIGHT:
+                if (hero.isShowingInventory()) {
+                    uiRenderer.onRMBClick(screenX, Values.SCREEN_HEIGHT - screenY);
+                }
+                break;
+        }
+        return true;
     }
 
     @Override

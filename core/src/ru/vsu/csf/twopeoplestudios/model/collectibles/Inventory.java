@@ -1,45 +1,55 @@
 package ru.vsu.csf.twopeoplestudios.model.collectibles;
 
-public class Inventory {
+import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
+import ru.vsu.csf.twopeoplestudios.model.characters.effects.Effect;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperties;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 
-    protected Collectible[] data;
+public class Inventory extends Panel {
 
-    public Collectible[] getData() {
-        return data;
-    }
+    public static final int WIDTH = 10;
+    public static final int HEIGHT = 4;
 
-    public Inventory() {
+    public int selectedRow, selectedColumn;
+
+    private Hero hero;
+
+    public Inventory(Hero hero) {
         data = new Collectible[40];
+        selectedRow = 0;
+        selectedColumn = 0;
+
+        this.hero = hero;
     }
 
-    public int getEmptySlot() {
-        for (int i = 0; i < data.length; i++) {
-            if (data[i] == null)
-                return i;
-        }
-        return -1;
+    public void selectItem(int i, int j) {
+        selectedRow = j;
+        selectedColumn = i;
     }
 
-    public boolean tryToPut(Collectible collectible) {
-        if (Items.getInstance().checkIfCountable(collectible.id)) {
-            for (Collectible c : data) {
-                if (c != null && c.id == collectible.id) {
-                    c.count += collectible.count;
-                    return true;
-                }
+    @Override
+    public Collectible getSelectedItem() {
+        return data[selectedRow * WIDTH + selectedColumn];
+    }
+
+
+    public void consume() {
+        Collectible item = getSelectedItem();
+
+        if (Items.getInstance().isHerb(item.getId())) {
+            hero.inflictDamage(20);
+
+            hero.revealHerbProperties(item.getId());
+
+            for (HerbProperties property : Herbs.getInstance().getPropertiesOfHerb(item.id)) {
+                hero.addActiveEffect(property.getEffect());
+            }
+
+            if (item.decreaseCount(1) == 0) {
+                drop(selectedRow * WIDTH + selectedColumn);
+                selectedRow = 0;
+                selectedColumn = 0;
             }
         }
-
-        int index = getEmptySlot();
-        if (index == -1)
-            return false;
-        data[index] = collectible;
-        return true;
-    }
-
-    public void drop(int index) {
-        if (data[index] == null)
-            return;
-        data[index] = null;
     }
 }

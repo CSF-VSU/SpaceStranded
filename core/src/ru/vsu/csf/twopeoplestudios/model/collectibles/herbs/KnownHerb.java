@@ -7,8 +7,10 @@ public class KnownHerb {
     public int id;
     public ArrayList<HerbProperties> properties;
 
-    public KnownHerb(int id, List<HerbProperties> properties) {
+    public KnownHerb(int id, final List<HerbProperties> properties) {
         this.id = id;
-        this.properties.addAll(properties);
+        this.properties = new ArrayList<HerbProperties>() {{
+            addAll(properties);
+        }};
     }
 }

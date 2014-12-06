@@ -13,6 +13,11 @@ public class Collectible {
         return count;
     }
 
+    public int decreaseCount(int amount) {
+        this.count -= amount;
+        return this.count;
+    }
+
     public Collectible(int id, int count) {
         this.id = id;
         this.count = count;

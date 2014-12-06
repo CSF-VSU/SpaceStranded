@@ -7,11 +7,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import ru.vsu.csf.twopeoplestudios.model.characters.effects.ActiveEffects;
+import ru.vsu.csf.twopeoplestudios.model.characters.effects.Effect;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Panel;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperties;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.KnownHerb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
@@ -39,9 +41,17 @@ public class Hero {
     Map map;
     Body body;
 
-    float hp;
-    float hunger;
-    float stamina;
+    private int maxHp;
+    private int maxFl;
+    private int maxSt;
+
+    private float hp;
+    private float hunger;
+    private float stamina;
+
+    private float hpRegenSpeed;
+    private float flDecreaseSpeed;
+    private float stRegenSpeed;
 
     Inventory inventory;
     GameScreen gameScreen; //to call show/hide inventory
@@ -50,12 +60,17 @@ public class Hero {
 
     Herb herbUnderFeet;
     ArrayList<KnownHerb> knownHerbs;
-    ActiveEffects activeEffects;
+    ArrayList<Effect> activeEffects;
+
     //endregion
 
     //region Getters/Setters
     public float getHp() {
         return hp;
+    }
+
+    public void inflictDamage(float damage) {
+        this.hp -= damage;
     }
 
     public float getHunger() {
@@ -77,11 +92,45 @@ public class Hero {
     public Panel getPanel() {
         return panel;
     }
+
+    public boolean isShowingInventory() {
+        return isShowingInventory;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getMaxFl() {
+        return maxFl;
+    }
+
+    public int getMaxSt() {
+        return maxSt;
+    }
+
+    public void increaseMaxHp(int amount) {
+        this.maxHp += amount;
+    }
+    public void increaseMaxFl(int amount) {
+        this.maxFl += amount;
+    }
+    public void increaseMaxSt(int amount) {
+        this.maxSt += amount;
+    }
+    public void decreaseMaxHp(int amount) {
+        this.maxHp -= amount;
+    }
+    public void decreaseMaxFl(int amount) {
+        this.maxFl -= amount;
+    }
+    public void decreaseMaxSt(int amount) {
+        this.maxSt -= amount;
+    }
     //endregion
 
     //region Creating
     public Hero(com.badlogic.gdx.physics.box2d.World world, Map map) {
-        //heroPosition = new Vector2(0, 0);
         heroPosition = World.getInstance().getRandomPosition();
         velocity = new Vector2(0, 0);
         leftPressed = false;
@@ -93,12 +142,20 @@ public class Hero {
         this.map = map;
         createBody();
 
-        hp = 100;
-        hunger = 100;
-        stamina = 100;
+        maxHp = 100;
+        maxFl = 100;
+        maxSt = 100;
+
+        hpRegenSpeed = 0.5f / 5f;
+        flDecreaseSpeed = 0.4f / 5f;
+        stRegenSpeed = 0.5f / 5f;
+
+        hp = maxHp;
+        hunger = maxFl;
+        stamina = maxFl;
 
         herbUnderFeet = null;
-        inventory = new Inventory();
+        inventory = new Inventory(this);
         isShowingInventory = false;
         panel = new Panel();
 
@@ -108,7 +165,7 @@ public class Hero {
         inventory.tryToPut(new Collectible(103,5));
 
         knownHerbs = new ArrayList<KnownHerb>();
-        activeEffects = new ActiveEffects();
+        activeEffects = new ArrayList<Effect>();
     }
 
     public void initGameScreen(GameScreen screen) {
@@ -143,6 +200,7 @@ public class Hero {
 
     //region Update
     public void update(float delta) {
+        //region Input and movement
         handleInputFlags();
 
         Vector2 vel = body.getLinearVelocity();
@@ -177,6 +235,26 @@ public class Hero {
         if (!(leftPressed || rightPressed || downPressed || upPressed)) {
             body.setLinearVelocity(vel.x * 0.91f, vel.y * 0.91f);
         }
+        //endregion
+
+        regen(delta);
+    }
+
+    private void regen(float delta) {
+        if (hpRegenSpeed * delta <= maxHp - hp)
+            hp += hpRegenSpeed * delta;
+        else
+            hp = maxHp;
+
+        if (flDecreaseSpeed * delta <= hunger)
+            hunger -= hpRegenSpeed * delta;
+        else
+            hunger = 0;
+
+        if (stRegenSpeed * delta <= maxSt - stamina)
+            stamina += hpRegenSpeed * delta;
+        else
+            stamina = maxSt;
     }
     //endregion
 
@@ -273,5 +351,31 @@ public class Hero {
             map.destroyHerb(herbUnderFeet);
             herbUnderFeet = null;
         }
+    }
+
+    private KnownHerb getKnownHerbWithId(int id) {
+        for (KnownHerb h : knownHerbs) {
+            if (h.id == id)
+                return h;
+        }
+        return null;
+    }
+
+    public void revealHerbProperties(int id) {
+        KnownHerb h = getKnownHerbWithId(id);
+        if (h != null)
+            h.properties.addAll(Herbs.getInstance().getPropertiesOfHerb(id));
+        else
+            knownHerbs.add(new KnownHerb(id, Herbs.getInstance().getPropertiesOfHerb(id)));
+    }
+
+    public ArrayList<HerbProperties> getKnownPropertiesOfHerb(int id) {
+        KnownHerb h = getKnownHerbWithId(id);
+        return (h != null) ? h.properties : null;
+    }
+
+    public void addActiveEffect(Effect effect) {
+        this.activeEffects.add(effect);
+        effect.onAttach(this);
     }
 }

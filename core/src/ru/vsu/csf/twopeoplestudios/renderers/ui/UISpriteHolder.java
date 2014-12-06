@@ -38,8 +38,8 @@ public class UISpriteHolder implements Disposable {
     public static ProgressBar.ProgressBarStyle progressBarHeroSTStyle;
     public static Label.LabelStyle labelStyle;
 
-    public static TextureRegion inventoryCell;
-    public static TextureRegion panelSelectedCell;
+    public static NinePatch inventoryCell;
+    public static NinePatch panelSelectedCell;
     public static TextureRegion portraitPanel;
     public static NinePatch inventoryBg;
 
@@ -96,8 +96,8 @@ public class UISpriteHolder implements Disposable {
 
 
         inventoryBg = new NinePatch(skinInvBg.getPatch("interface_pan"));
-        inventoryCell = new TextureRegion(skinInvCell.getRegion("inventory_cell"));
-        panelSelectedCell = new TextureRegion(skinInvCell.getRegion("panel_cell_selection"));
+        inventoryCell = new NinePatch(skinInvCell.getPatch("inventory_cell"));
+        panelSelectedCell = new NinePatch(skinInvCell.getPatch("panel_cell_selection"));
 
         portraitPanel = new TextureRegion(new Texture(Gdx.files.internal("gfx/ui/portraitStates.png")));
     }

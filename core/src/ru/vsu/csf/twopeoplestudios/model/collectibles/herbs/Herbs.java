@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Herbs {
 
-    ArrayList<HerbInfo> herbs;
+    public ArrayList<HerbInfo> herbs;
 
     private Herbs() {
         herbs = new ArrayList<HerbInfo>() {{
@@ -15,7 +15,7 @@ public class Herbs {
                 add(HerbProperties.HP_DOWN);
                 add(HerbProperties.ST_DOWN);
             }}));
-            add(new HerbInfo(0, new ArrayList<HerbProperties>() {{
+            add(new HerbInfo(2, new ArrayList<HerbProperties>() {{
                 add(HerbProperties.ST_UP);
             }}));
         }};
@@ -24,8 +24,12 @@ public class Herbs {
     private static Herbs instance;
 
     public static Herbs getInstance() {
-        if (instance != null)
+        if (instance == null)
             instance = new Herbs();
         return  instance;
+    }
+
+    public ArrayList<HerbProperties> getPropertiesOfHerb(int id) {
+        return herbs.get(id).getProperties();
     }
 }

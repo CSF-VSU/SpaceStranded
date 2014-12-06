@@ -8,6 +8,12 @@ import java.util.HashMap;
 
 public class Items {
 
+    private static final int GROUP_SIZE = 99;
+
+    private static final int HERB_ID = 0;
+    private static final int ITEM_ID = 100;
+
+
     private static Items instance;
 
     private HashMap<Integer, Item> items;
@@ -35,7 +41,13 @@ public class Items {
         return items.get(id).texture;
     }
 
+    public String getItemName(int id) { return items.get(id).name; }
+
     public boolean checkIfCountable(int id) {
         return items.get(id).isCountable;
+    }
+
+    public boolean isHerb(int id) {
+        return (id >= HERB_ID && id <= HERB_ID + GROUP_SIZE);
     }
 }
