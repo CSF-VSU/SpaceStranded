@@ -14,20 +14,16 @@ public class World {
     public MapTile[][] middleMapPart;
     public MapEdge[][] edges;
 
-
     public int height;
 
     public void create() {
 
-        size = 128;
+        size = 256;
         map = new MapTile[2 * size][size];
         edges = new MapEdge[2 * size][2 * size];
         for (int i = 0; i < 2 * size; i++)
             for (int j = 0; j < 2 * size; j++)
                 edges[i][j] = new MapEdge();
-        /*for (int i = 0; i < 2*size; i++)
-            for (int j = 0; j < size; j++)
-                map[i][j] = new MapTile();*/
         firstMapPart = new MapTile[size][size];
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
@@ -93,23 +89,23 @@ public class World {
         for (int i = 0; i < 2 * size; i++)
             for (int j = 0; j < size; j++)
                 if (!(map[i][j].type == TerrainType.WATER))
-                    if (map[i][j].height == 1)
+                    if (map[i][j].height == 0)
                         map[i][j].type = TerrainType.SAND;
                     else
                         map[i][j].type = TerrainType.GROUND;
-        for (int i = 0; i < 10; i++) //кол-во рек
+        for (int i = 0; i < 100; i++) //кол-во рек
         {
             List<Integer> ec = chooseRandomGroundEdge(); //edge coordinates
             int x = ec.get(0);
             int y = ec.get(1);
             edges[x][y].isRiver = true;
             int direction = getDirection(x,y);
-            while (farFromSea(x,y)) {
+            while (farFromSea(x,y, direction)) {
                 ec = chooseNextEdge(x,y, direction);
                 x = ec.get(0);
                 y = ec.get(1);
                 edges[x][y].isRiver = true;
-                //TODO: проверить крайние случаи
+                direction = getDirection(x,y);
             }
         }
 
@@ -159,34 +155,36 @@ public class World {
         if (step > 1) makeFractal(mapPart, step / 2);
     }
 
-    private List<Integer> getTilesFromEdge(int x, int y) {
+    private List<Integer> getTilesFromEdge(int x, int y) { //возвращает 4 значения - координаты тайлов, между которыми находится ребро
         ArrayList<Integer> res = new ArrayList<Integer>();
-        if (x % 2 == 0) { //ребро горизонтальное
-            res.add(x / 2 - 1);
-            res.add(y);
-            res.add(x / 2);
-            res.add(y);
+        if (y % 2 == 0) { //ребро горизонтальное
+            res.add(x);
+            res.add(y / 2 - 1);
+            res.add(x);
+            res.add(y / 2);
         }
         else { //ребро вертикальное
-            res.add(x / 2);
-            res.add(y - 1);
-            res.add(x / 2);
-            res.add(y);
+            res.add(x - 1);
+            res.add(y / 2);
+            res.add(x);
+            res.add(y / 2);
         }
         return res;
     }
 
-    private List<Integer> chooseRandomGroundEdge() {
+    private List<Integer> chooseRandomGroundEdge() { //возвращает 2 значения - координаты случайного ребра между тайлами земли
         Random rnd = new Random();
         int x = 0,y = 0;
         boolean isGround = false;
         ArrayList<Integer> res = new ArrayList<Integer>();
         while (!(isGround)) {
-            x = rnd.nextInt(2 * size - 1);
-            y = rnd.nextInt(2 * size - 1);
-            List<Integer> tc = getTilesFromEdge(x, y);
+            x = rnd.nextInt(2 * size - 3) + 2; //не край карты
+            y = rnd.nextInt(2 * size - 3) + 2; //не край карты
+            List<Integer> tc = getTilesFromEdge(x, y); //tiles coordinates
             if ((map[tc.get(0)][tc.get(1)].type != TerrainType.WATER) &&
-                    (map[tc.get(2)][tc.get(3)].type != TerrainType.WATER)) //ребро - между тайлами земли
+                (map[tc.get(0)][tc.get(1)].height > 3) &&
+                (map[tc.get(2)][tc.get(3)].type != TerrainType.WATER) &&
+                (map[tc.get(2)][tc.get(3)].height > 3)) //ребро - между тайлами земли
                 isGround = true;
         }
         res.add(x);
@@ -194,20 +192,19 @@ public class World {
         return res;
     }
 
-    private int getDirection (int x, int y) {
+    private int getDirection (int x, int y) { //1 - вправо/вверх, -1 - влево/вниз, 0 - неизвестно
         int dir;
-        if (x % 2 == 0) {// ребро - горизонтальное
-            List<Integer> left = getTilesFromEdge(x, y-1);
+        if (y % 2 == 0) {// ребро - горизонтальное
+            List<Integer> left = getTilesFromEdge(x - 1, y);
             int leftHeight = map[left.get(0)][left.get(1)].height + map[left.get(2)][left.get(3)].height;
-            List<Integer> right = getTilesFromEdge(x, y+1);
+            List<Integer> right = getTilesFromEdge(x + 1, y);
             int rightHeight = map[right.get(0)][right.get(1)].height + map[right.get(2)][right.get(3)].height;
             if (leftHeight > rightHeight)
                 dir = 1;
             else if (leftHeight < rightHeight)
                 dir = -1;
             else {
-                Random rnd = new Random();
-                int r = rnd.nextInt(1);
+                int r = (int)(Math.random()*2);
                 if (r == 0)
                     dir = 1;
                 else
@@ -215,17 +212,16 @@ public class World {
             }
         }
         else { //ребро - вертикальное
-            List<Integer> down = getTilesFromEdge(x+2, y);
+            List<Integer> down = getTilesFromEdge(x, y + 2);
             int downHeight = map[down.get(0)][down.get(1)].height + map[down.get(2)][down.get(3)].height;
-            List<Integer> up = getTilesFromEdge(x-2, y);
+            List<Integer> up = getTilesFromEdge(x, y - 2);
             int upHeight = map[up.get(0)][up.get(1)].height + map[up.get(2)][up.get(3)].height;
             if (downHeight > upHeight)
                 dir = 1;
             else if (downHeight < upHeight)
                 dir = -1;
             else {
-                Random rnd = new Random();
-                int r = rnd.nextInt(1);
+                int r = (int)(Math.random()*2);
                 if (r == 0)
                     dir = 1;
                 else
@@ -235,36 +231,41 @@ public class World {
         return dir;
     }
 
-    private boolean farFromSea(int x, int y) {
+    private boolean farFromSea(int x, int y, int direction) {
         boolean res = true;
-        List<Integer> tc = getTilesFromEdge(x, y);
-        if ((map[tc.get(0)][tc.get(1)].height == 1) &&
-                (map[tc.get(2)][tc.get(3)].height == 1))
-            res = false;
+        List<Integer> tiles;
+        List<Integer> neighbours = findNeighbours(x,y, direction);
+        for (int i = 0; i < neighbours.size(); i += 2) {
+            tiles = getTilesFromEdge(neighbours.get(i), neighbours.get(i + 1));
+            if ((map[tiles.get(0)][tiles.get(1)].type == TerrainType.WATER) ||
+                    (map[tiles.get(2)][tiles.get(3)].type == TerrainType.WATER))
+                res = false;
+        }
+
         return res;
     }
 
-    private List<Integer> chooseNextEdge(int x, int y, int direction) {
+    private List<Integer> chooseNextEdge(int x, int y, int direction) { //возвращает 2 значения - координаты следующего участка реки
         List<Integer> neighbours = findNeighbours(x,y, direction);
         return chooseMin(neighbours);
     }
 
-    private List<Integer> findNeighbours(int x, int y, int direction) {
+    private List<Integer> findNeighbours(int x, int y, int direction) { //возвращает 6 значений - координаты ребер, соседствующих с исходным с учетом направления
         List<Integer> res = new ArrayList<Integer>();
-        if (x % 2 == 0) {  //ребро - горизонтальное
+        if (y % 2 == 0) {  //ребро - горизонтальное
             if (direction == -1) {
+                res.add(x);
+                res.add(y - 1);
                 res.add(x - 1);
                 res.add(y);
                 res.add(x);
+                res.add(y + 1);
+            }
+            else if (direction == 1) {
+                res.add(x + 1);
                 res.add(y - 1);
                 res.add(x + 1);
                 res.add(y);
-            }
-            else if (direction == 1) {
-                res.add(x - 1);
-                res.add(y + 1);
-                res.add(x);
-                res.add(y + 1);
                 res.add(x + 1);
                 res.add(y + 1);
             }
@@ -274,24 +275,24 @@ public class World {
             if (direction == 1) {
                 res.add(x - 1);
                 res.add(y - 1);
-                res.add(x - 2);
-                res.add(y);
-                res.add(x - 1);
-                res.add(y);
+                res.add(x);
+                res.add(y - 2);
+                res.add(x);
+                res.add(y - 1);
             }
             else if (direction == -1) {
-                res.add(x + 1);
-                res.add(y - 1);
-                res.add(x + 2);
-                res.add(y);
-                res.add(x + 1);
-                res.add(y);
+                res.add(x - 1);
+                res.add(y + 1);
+                res.add(x);
+                res.add(y + 2);
+                res.add(x);
+                res.add(y + 1);
             }
         }
         return res;
     }
 
-    private List<Integer> chooseMin(List<Integer> neighbours) {
+    private List<Integer> chooseMin(List<Integer> neighbours) { //возвращает 2 значения - координаты ребра, минимальноо из соседствующих
         List<Integer> res = new ArrayList<Integer>();
         List<Integer> tiles;
         int current, x = 0, y = 0;
@@ -307,8 +308,7 @@ public class World {
                     rnd = true;
                 }
                 else {
-                    Random rn = new Random();
-                    int r = rn.nextInt(1);
+                    int r = (int)(Math.random()*2);
                     if (r == 0) {
                         x = neighbours.get(i);
                         y = neighbours.get(i + 1);
@@ -321,7 +321,7 @@ public class World {
         return res;
     }
 
-    private int findMin(List<Integer> neighbours) {
+    private int findMin(List<Integer> neighbours) { //возвращает минимальную высоту для соседних ребер
         int res = 1000, current;
         List<Integer> tiles;
         for (int i = 0; i < neighbours.size(); i += 2) {
