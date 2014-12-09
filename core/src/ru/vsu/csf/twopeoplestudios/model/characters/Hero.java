@@ -54,8 +54,6 @@ public class Hero {
     private float stRegenSpeed;
 
     Inventory inventory;
-    GameScreen gameScreen; //to call show/hide inventory
-    boolean isShowingInventory;
     Panel panel;
 
     Herb herbUnderFeet;
@@ -97,10 +95,6 @@ public class Hero {
 
     public Panel getPanel() {
         return panel;
-    }
-
-    public boolean isShowingInventory() {
-        return isShowingInventory;
     }
 
     public int getMaxHp() {
@@ -162,23 +156,19 @@ public class Hero {
 
         herbUnderFeet = null;
         inventory = new Inventory(this);
-        isShowingInventory = false;
         panel = new Panel();
 
         inventory.tryToPut(new Collectible(100,5));
         inventory.tryToPut(new Collectible(101,5));
         inventory.tryToPut(new Collectible(102,5));
         inventory.tryToPut(new Collectible(103,5));
+        inventory.tryToPut(new Collectible(105,5));
         inventory.tryToPut(new Collectible(0,5));
         inventory.tryToPut(new Collectible(1,5));
         inventory.tryToPut(new Collectible(2,5));
 
         knownHerbs = new ArrayList<KnownHerb>();
         activeEffects = new ArrayList<Effect>();
-    }
-
-    public void initGameScreen(GameScreen screen) {
-        this.gameScreen = screen;
     }
 
     private void createBody() {
@@ -332,28 +322,6 @@ public class Hero {
             case 'у':
                 if (herbUnderFeet != null)
                     collectHerb();
-                break;
-            case 'i':
-            case 'ш':
-                if (!isShowingInventory) {
-                    isShowingInventory = true;
-                    gameScreen.showInventory();
-                } else {
-                    isShowingInventory = false;
-                    gameScreen.hideInventory();
-                }
-                break;
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-            case '0':
-                gameScreen.panelCellSelect(Integer.parseInt(character + ""));
                 break;
         }
     }

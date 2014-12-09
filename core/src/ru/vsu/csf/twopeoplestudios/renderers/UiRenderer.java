@@ -12,11 +12,13 @@ import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Items;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperty;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
+import ru.vsu.csf.twopeoplestudios.model.craft.Recipes;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 import ru.vsu.csf.twopeoplestudios.screens.stages.GameStage;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UiRenderer {
 
@@ -41,6 +43,16 @@ public class UiRenderer {
     private GameStage stage;
 
     private boolean isShowingInventory;
+    private boolean isShowingCrafting;
+
+
+    public boolean isShowingInventory() {
+        return isShowingInventory;
+    }
+
+    public boolean isShowingCrafting() {
+        return isShowingCrafting;
+    }
 
     public UiRenderer(Hero hero) {
         this.hero = hero;
@@ -49,35 +61,11 @@ public class UiRenderer {
         Gdx.input.setInputProcessor(stage);
     }
 
-    public void setShowingInventory(boolean isShowingInventory) {
-        this.isShowingInventory = isShowingInventory;
-    }
-
-
-    public void render(Batch uiBatch) {
+    public void render(Batch uiBatch, float delta) {
         uiBatch.begin();
         uiBatch.draw(UISpriteHolder.portraitPanel, 0, Values.SCREEN_HEIGHT - UISpriteHolder.portraitPanel.getRegionHeight());
-        uiBatch.end();
-
-        stage.act();
-        stage.draw();
-
-        uiBatch.begin();
 
         //region Panel
-        UISpriteHolder.font32.draw(uiBatch,
-                STATS_FORMAT.format(hero.getHp()) + " / " + hero.getMaxHp(),
-                475,
-                Values.SCREEN_HEIGHT - 30);
-        UISpriteHolder.font32.draw(uiBatch,
-                STATS_FORMAT.format(hero.getHunger()) + " / " + hero.getMaxFl(),
-                475,
-                Values.SCREEN_HEIGHT - 30 - 33);
-        UISpriteHolder.font32.draw(uiBatch,
-                STATS_FORMAT.format(hero.getStamina()) + " / " + hero.getMaxSt(),
-                475,
-                Values.SCREEN_HEIGHT - 30 - 2*33);
-
         int selectedCellIndex = hero.getPanel().getSelectedIndex();
         for (int i = 0; i < PANEL_SIZE; i++) {
             UISpriteHolder.inventoryCell.draw(uiBatch,
@@ -142,14 +130,14 @@ public class UiRenderer {
 
             Collectible item = hero.getInventory().getSelectedItem();
             if (item != null) {
-                uiBatch.draw(Items.getInstance().getItemTexture(item.getId()),
+                uiBatch.draw(Items.getInstance().getItemTexture(item.getId()), //icon
                         x + 10,
                         SUBPANEL_HEIGHT + INVENTORY_MARGIN_BOTTOM - 10 - 50,
                         50,
                         50
                 );
 
-                UISpriteHolder.font32.draw(uiBatch,
+                UISpriteHolder.font32.draw(uiBatch,                             //name
                         Items.getInstance().getItemName(item.getId()),
                         x + 10 + 50 + 10, //margin, gfx size, margin
                         SUBPANEL_HEIGHT + INVENTORY_MARGIN_BOTTOM - 25);
@@ -178,6 +166,20 @@ public class UiRenderer {
                                     50, 50);
                         }
                 }
+                else if (Recipes.get().ifItemTransformable(item.getId())) {  // craft
+                    List<Integer> transforms = Recipes.get().getIDsOfTransformResult(item.getId());
+                    for (int t = 0; t < transforms.size(); t++) {
+                        UISpriteHolder.inventoryBg.draw(uiBatch,
+                                x + 10 + t*60,
+                                SUBPANEL_HEIGHT + INVENTORY_MARGIN_BOTTOM - 150,
+                                50, 50);
+
+                        uiBatch.draw(Items.getInstance().getItemTexture(transforms.get(t)),
+                                x + 10 + t*60,
+                                SUBPANEL_HEIGHT + INVENTORY_MARGIN_BOTTOM - 150,
+                                50, 50);
+                    }
+                }
             }
 
             //endregion
@@ -198,6 +200,24 @@ public class UiRenderer {
         }
         //endregion
 
+        uiBatch.end();
+
+        stage.act(delta);
+        stage.draw();
+
+        uiBatch.begin();
+        UISpriteHolder.font32.draw(uiBatch,
+                STATS_FORMAT.format(hero.getHp()) + " / " + hero.getMaxHp(),
+                475,
+                Values.SCREEN_HEIGHT - 30);
+        UISpriteHolder.font32.draw(uiBatch,
+                STATS_FORMAT.format(hero.getHunger()) + " / " + hero.getMaxFl(),
+                475,
+                Values.SCREEN_HEIGHT - 30 - 33);
+        UISpriteHolder.font32.draw(uiBatch,
+                STATS_FORMAT.format(hero.getStamina()) + " / " + hero.getMaxSt(),
+                475,
+                Values.SCREEN_HEIGHT - 30 - 2*33);
         uiBatch.end();
     }
 
@@ -229,5 +249,13 @@ public class UiRenderer {
     public void onRMBClick(int screenX, int screenY) {
         if (onClick(screenX, screenY))
             hero.getInventory().consume();
+    }
+
+    public void toggleInventory() {
+        this.isShowingInventory = !this.isShowingInventory;
+    }
+
+    public void toggleCrafting() {
+        this.isShowingCrafting = !this.isShowingCrafting;
     }
 }

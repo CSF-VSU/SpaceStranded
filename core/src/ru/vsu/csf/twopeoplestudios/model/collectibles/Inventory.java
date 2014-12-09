@@ -51,4 +51,11 @@ public class Inventory extends Panel {
             }
         }
     }
+
+    public boolean has(int id, int count) {
+        for (Collectible c : data)
+            if (c != null && c.getId() == id && c.getCount() >= count)
+                return true;
+        return false;
+    }
 }

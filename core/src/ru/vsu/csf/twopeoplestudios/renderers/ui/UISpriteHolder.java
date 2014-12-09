@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Disposable;
 
 public class UISpriteHolder implements Disposable {
@@ -24,12 +21,15 @@ public class UISpriteHolder implements Disposable {
     public static TextureAtlas atlasHeroStatsPrgBars;
     public static TextureAtlas atlasInventoryCell;
     public static TextureAtlas atlasInvBg;
+    public static TextureAtlas atlasCraftItem;
 
     public static Skin skinBtns;
     public static Skin skinPrgBar;
     public static Skin skinHeroStatsPrgBar;
     public static Skin skinInvCell;
     public static Skin skinInvBg;
+    public static Skin skinLbls;
+    public static Skin skinCraftItem;
 
     public static TextButton.TextButtonStyle textButtonStyle;
     public static ProgressBar.ProgressBarStyle progressBarStyle;
@@ -45,18 +45,26 @@ public class UISpriteHolder implements Disposable {
 
     public static void init() {
         font32 = new BitmapFont(Gdx.files.internal("gfx/fonts/main32.fnt"), false); //подгрузка готового шрифта из файла
+        final Label.LabelStyle labelStyle1 = new Label.LabelStyle() {{
+            font = font32;
+        }};
 
         atlasBtns = new TextureAtlas(Gdx.files.internal("gfx/ui/button/button.pack")); //класс для загрузки текстурных паков - здеся атласы
         atlasPrgBar = new TextureAtlas(Gdx.files.internal("gfx/ui/progress_bar/progress_bar.pack"));
         atlasHeroStatsPrgBars = new TextureAtlas(Gdx.files.internal("gfx/ui/state_progress_bar/state_progress_bar.pack"));
         atlasInventoryCell = new TextureAtlas(Gdx.files.internal("gfx/ui/inventory_cell/inventory_cell.pack"));
         atlasInvBg = new TextureAtlas(Gdx.files.internal("gfx/ui/inventory_bg/inv_bg.pack"));
+        atlasCraftItem = new TextureAtlas(Gdx.files.internal("gfx/ui/craftItem/craftItem.pack"));
 
         skinBtns = new Skin(atlasBtns); //считай, стиль. Применяется к разным UI-элементам
         skinPrgBar = new Skin(atlasPrgBar);
         skinHeroStatsPrgBar = new Skin(atlasHeroStatsPrgBars);
         skinInvCell = new Skin(atlasInventoryCell);
         skinInvBg = new Skin(atlasInvBg);
+        skinLbls = new Skin() {{
+            add("default", labelStyle1, Label.LabelStyle.class);
+        }};
+        skinCraftItem = new Skin(atlasCraftItem);
 
         textButtonStyle = new TextButton.TextButtonStyle() {{ //стиль, применяющийся для создаваемых кнопок
             up = skinBtns.getDrawable("button.normal"); //сами строки эти можно подсмотреть в *.pack-файле

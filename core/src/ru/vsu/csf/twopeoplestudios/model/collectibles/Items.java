@@ -28,6 +28,10 @@ public class Items {
             put(101, new Item(101, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/1.png"))), "Scanner", "This is an item", true));
             put(102, new Item(102, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/2.png"))), "Ore", "This is an item", true));
             put(103, new Item(103, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/3.png"))), "Metal", "This is an item", true));
+            put(104, new Item(104, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/4.png"))), "Cup", "This is an item", true));
+            put(105, new Item(105, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/5.png"))), "Scrap", "This is an item", true));
+            put(106, new Item(106, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/6.png"))), "Forcer", "This is an item", true));
+            put(107, new Item(107, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/7.png"))), "Gear", "This is an item", true));
         }};
     }
 
