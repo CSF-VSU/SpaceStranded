@@ -100,6 +100,9 @@ public class MapTestScreen extends AbstractScreen {
                         case WATER:
                             batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
                             break;
+                        case INNER_WATER:
+                            batch.draw(water, i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);
+                            break;
                         default:
                             if (map[i][j].height >= lands.size())
                                 batch.draw(lands.get(12), i * TILE_SIZE + MARGIN_LEFT, MARGIN_BOTTOM + j * TILE_SIZE + MARGIN_BOTTOM, TILE_SIZE, TILE_SIZE);

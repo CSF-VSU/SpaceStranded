@@ -53,9 +53,9 @@ public class World {
         setCell(middleMapPart, 0, size / 2, TerrainType.WATER);
         setCell(middleMapPart, size / 2, size / 2, TerrainType.GROUND);
 
-        makeFractal(firstMapPart, size / 4);
-        makeFractal(secondMapPart, size / 4);
-        makeFractal(middleMapPart, size / 4);
+        makeFractal(firstMapPart, size / 4, size);
+        makeFractal(secondMapPart, size / 4, size);
+        makeFractal(middleMapPart, size / 4, size);
 
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++) {
@@ -93,6 +93,30 @@ public class World {
                         map[i][j].type = TerrainType.SAND;
                     else
                         map[i][j].type = TerrainType.GROUND;
+
+
+        for (int i = 0; i < 50; i++) {//кол-во водоемов
+            int innerSize = size/16;
+            MapTile[][] inner = new MapTile[innerSize][innerSize];
+            for (int k = 0; k < innerSize; k++)
+                for (int j = 0; j < innerSize; j++)
+                    inner[k][j] = new MapTile();
+            setCell(inner, 0, 0, TerrainType.WATER);
+            setCell(inner, innerSize / 2, 0, TerrainType.WATER);
+            setCell(inner, 0, innerSize / 2, TerrainType.WATER);
+            setCell(inner, innerSize / 2, innerSize / 2, TerrainType.GROUND);
+            makeFractal(inner, innerSize / 4, innerSize);
+            for (int k = 0; k < innerSize; k++)
+                for (int j = 0; j < innerSize; j++)
+                    if (inner[k][j].type == TerrainType.GROUND)
+                        inner[k][j].type = TerrainType.INNER_WATER;
+                    else
+                        inner[k][j].type = TerrainType.GROUND;
+            List<Integer> tc = getRandomHighTile(innerSize);
+            superimpose(inner, tc);
+        }
+
+
         for (int i = 0; i < 100; i++) //кол-во рек
         {
             List<Integer> ec = chooseRandomGroundEdge(); //edge coordinates
@@ -119,18 +143,9 @@ public class World {
         return mapPart[x][y].type;
     }
 
-
-    private boolean checkHeight(int i, int j, int height) {
-        return (map[i][j].type == TerrainType.GROUND) &&
-                ((i - 1 >= 0) && (map[i - 1][j].height + 1 == height) ||
-                        (i + 1 < size*2) && (map[i + 1][j].height + 1 == height) ||
-                        (j - 1 >= 0) && (map[i][j - 1].height + 1 == height) ||
-                        (j + 1 < size) && (map[i][j + 1].height + 1 == height));
-    }
-
-    private void makeFractal(MapTile[][] mapPart, int step) {
-        for (int y = 0; y < size; y += step) {
-            for (int x = 0; x < size; x += step) {
+    private void makeFractal(MapTile[][] mapPart, int step, int mySize) {
+        for (int y = 0; y < mySize; y += step) {
+            for (int x = 0; x < mySize; x += step) {
                 // Внутренний цикл вычисляет (cx,cy)
                 // это точка от которой копируется цвет карты
 
@@ -145,14 +160,45 @@ public class World {
 
                 // вращать мир как тор
                 // для гарантии что getCell() и setCell() в пределах границ
-                cx = cx % size;
-                cy = cy % size;
+                cx = cx % mySize;
+                cy = cy % mySize;
 
                 // копировать из (cx,cy) в (x,y)
                 setCell(mapPart, x, y, getCell(mapPart, cx, cy));
             }
         }
-        if (step > 1) makeFractal(mapPart, step / 2);
+        if (step > 1) makeFractal(mapPart, step / 2, mySize);
+    }
+
+    private boolean checkHeight(int i, int j, int height) {
+        return (map[i][j].type == TerrainType.GROUND) &&
+                ((i - 1 >= 0) && (map[i - 1][j].height + 1 == height) ||
+                        (i + 1 < size*2) && (map[i + 1][j].height + 1 == height) ||
+                        (j - 1 >= 0) && (map[i][j - 1].height + 1 == height) ||
+                        (j + 1 < size) && (map[i][j + 1].height + 1 == height));
+    }
+
+    private List<Integer> getRandomHighTile(int minHeight) {
+        List<Integer> res = new ArrayList<Integer>();
+        Random rnd = new Random();
+        int x = 0, y = 0;
+        boolean isFine = false;
+        while (!(isFine)) {
+            x = rnd.nextInt(2 * size - 3) + 2; //не край карты
+            y = rnd.nextInt(size - 2) + 1; //не край карты
+            if ((map[x][y].type == TerrainType.GROUND) && (map[x][y].height >= minHeight))
+                isFine = true;
+        }
+        res.add(x);
+        res.add(y);
+        return res;
+    }
+
+    private void superimpose(MapTile[][] inner, List<Integer> tc) {
+        for (int i = 0; i < inner.length; i++)
+            for (int j = 0; j < inner[0].length; j++)
+                if (inner[i][j].type == TerrainType.INNER_WATER)
+                    map[tc.get(0) + i][tc.get(1) + j].type = TerrainType.INNER_WATER;
     }
 
     private List<Integer> getTilesFromEdge(int x, int y) { //возвращает 4 значения - координаты тайлов, между которыми находится ребро

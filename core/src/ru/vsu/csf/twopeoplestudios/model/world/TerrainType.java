@@ -5,5 +5,6 @@ public enum TerrainType {
     GROUND,
     SAND,
     MOUNTAIN,
-    SNOW
+    SNOW,
+    INNER_WATER
 }
