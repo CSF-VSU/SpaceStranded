@@ -35,18 +35,18 @@ public class GameStage extends Stage {
     private Table scrollTable;
     private ScrollPane pane;
 
-    public GameStage(Hero hero, UiRenderer uiRenderer) {
+    public GameStage(final Hero hero, UiRenderer uiRenderer) {
 
         this.hero = hero;
         this.uiRenderer = uiRenderer;
 
-        //setDebugAll(true);
+//        setDebugAll(true);
         mainTable = new Table() {{
             setBounds(0, 0, Values.SCREEN_WIDTH, Values.SCREEN_HEIGHT);
         }};
         craftingTable = new Table() {{
             setBounds(300, 330, 800, 500);
-            //setDebug(true);
+//            setDebug(true);
             setVisible(false);
             setBackground(new TextureRegionDrawable(new TextureRegion(UISpriteHolder.inventoryBg.getTexture())));
         }};
@@ -63,112 +63,12 @@ public class GameStage extends Stage {
         mainTable.add(hg).padLeft(310).padTop(12).width(500).left().row();
         mainTable.add(st).padLeft(310).width(500).padTop(12).left().row();
 
-        /*final List.ListStyle style = new List.ListStyle() {{
-            font = UISpriteHolder.font32;
-            fontColorSelected = Color.WHITE;
-            fontColorUnselected = Color.WHITE;
-            selection = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("gfx/ui/test/selection.png"))));
-        }};*/
         final ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
-
-        /*Skin s = new Skin() {{
-            add("default", style, List.ListStyle.class);
-            *//*add("font", UISpriteHolder.font32);
-            add("fontColorSelected", Color.WHITE);
-            add("fontColorUnselected", Color.WHITE);
-            add("selection", new Texture(Gdx.files.internal("gfx/ui/test/selection.png")));*//*
-        }};*/
         Skin scrollSkin = new Skin() {{
-            //scrollPaneStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("gfx/ui/test/selection.png"))));
             add("default", scrollPaneStyle, ScrollPane.ScrollPaneStyle.class);
         }};
 
-        scrollTable = new Table() {{
-            /*add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(102);
-                add(103);
-            }}, 106));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(101);
-                add(100);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(101);
-                add(100);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(102);
-                add(101);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(102);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(105);
-            }}, 102));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(104);
-            }}, 101));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(101);
-                add(100);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(102);
-                add(101);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(102);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(105);
-            }}, 102));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(104);
-            }}, 101));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(101);
-                add(100);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(102);
-                add(101);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(102);
-            }}, 105));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(105);
-            }}, 102));
-            row();
-            add(new CraftRecipe(new LinkedList<Integer>() {{
-                add(103);
-                add(104);
-            }}, 101));*/
-        }};
+        scrollTable = new Table();
 
         pane = new ScrollPane(scrollTable, scrollSkin);
         pane.setBounds(100, 100, 600, 400);
@@ -183,7 +83,7 @@ public class GameStage extends Stage {
                 y += pane.getScrollY();
 
                 int selectedItem = (int) (y / CraftRecipe.ITEM_HEIGHT);
-                Gdx.app.log("", "X: " + x + "; Y:" + y + "; Selected:" + selectedItem);
+                //Gdx.app.log("", "X: " + x + "; Y:" + y + "; Selected:" + selectedItem);
 
                 for (int i = 0; i < scrollTable.getChildren().size; i++) {
                     ((CraftRecipe) scrollTable.getChildren().get(i)).unselect();
@@ -199,7 +99,14 @@ public class GameStage extends Stage {
             addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    //todo: onClick
+
+                    for (int i = 0; i < scrollTable.getChildren().size; i++) {
+                        CraftRecipe recipe = ((CraftRecipe) scrollTable.getChildren().get(i));
+                        if (recipe.isSelected()) {
+                            hero.getInventory().craft(recipe.getId());
+                            updateCraftTable();
+                        }
+                    }
                 }
             });
         }};
@@ -258,11 +165,10 @@ public class GameStage extends Stage {
     }
 
     private void updateCraftTable() {
-        //todo: add ids to recipes
         List<Recipe> data = Recipes.get().getAllPossibleProducts(hero.getInventory());
         scrollTable.clear();
         for (Recipe r : data) {
-            scrollTable.add(new CraftRecipe(r)).expandX().row();
+            scrollTable.add(new CraftRecipe(r, hero.getInventory())).expandX().row();
         }
         scrollTable.layout();
         scrollTable.invalidate();

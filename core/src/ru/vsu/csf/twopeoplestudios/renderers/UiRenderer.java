@@ -112,11 +112,12 @@ public class UiRenderer {
                                 INVENTORY_MARGIN_LEFT + j * (INVENTORY_CELL_SIZE) + 20,
                                 INVENTORY_MARGIN_BOTTOM + i * (INVENTORY_CELL_SIZE) + 20);
 
-                    j++;
-                    if (j == Inventory.WIDTH) {
-                        i++;
-                        j = 0;
-                    }
+                }
+
+                j++;
+                if (j == Inventory.WIDTH) {
+                    i++;
+                    j = 0;
                 }
             }
 

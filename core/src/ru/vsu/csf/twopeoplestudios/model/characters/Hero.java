@@ -19,7 +19,6 @@ import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
 import ru.vsu.csf.twopeoplestudios.model.world.World;
-import ru.vsu.csf.twopeoplestudios.screens.GameScreen;
 
 import java.util.ArrayList;
 
@@ -158,14 +157,14 @@ public class Hero {
         inventory = new Inventory(this);
         panel = new Panel();
 
-        inventory.tryToPut(new Collectible(100,5));
-        inventory.tryToPut(new Collectible(101,5));
-        inventory.tryToPut(new Collectible(102,5));
-        inventory.tryToPut(new Collectible(103,5));
-        inventory.tryToPut(new Collectible(105,5));
-        inventory.tryToPut(new Collectible(0,5));
-        inventory.tryToPut(new Collectible(1,5));
-        inventory.tryToPut(new Collectible(2,5));
+        inventory.add(new Collectible(100, 5));
+        inventory.add(new Collectible(101, 5));
+        inventory.add(new Collectible(102, 5));
+        inventory.add(new Collectible(103, 5));
+        inventory.add(new Collectible(105, 5));
+        inventory.add(new Collectible(0, 5));
+        inventory.add(new Collectible(1, 5));
+        inventory.add(new Collectible(2, 5));
 
         knownHerbs = new ArrayList<KnownHerb>();
         activeEffects = new ArrayList<Effect>();
@@ -336,7 +335,7 @@ public class Hero {
     }
 
     private void collectHerb() {
-        if (this.inventory.tryToPut(herbUnderFeet)) {
+        if (this.inventory.add(herbUnderFeet)) {
             stamina -= 15;
             map.destroyHerb(herbUnderFeet);
             herbUnderFeet = null;

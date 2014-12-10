@@ -1,6 +1,5 @@
 package ru.vsu.csf.twopeoplestudios.model.craft;
 
-import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
 
 import java.util.ArrayList;
@@ -12,31 +11,31 @@ public class Recipes {
 
     private Recipes() {
         recipes = new ArrayList<Recipe>() {{ //todo: init from file
-            add(new Recipe(new ArrayList<CraftPart>() {{  // ore -> metal
+            add(new Recipe(0, new ArrayList<CraftPart>() {{  // ore -> metal
                 add(new CraftPart(102, 1));
             }}, new CraftPart(103, 1), true));
 
-            add(new Recipe(new ArrayList<CraftPart>() {{  // metal -> scrap
+            add(new Recipe(1, new ArrayList<CraftPart>() {{  // metal -> scrap
                 add(new CraftPart(103, 1));
             }}, new CraftPart(105, 1), true));
 
-            add(new Recipe(new ArrayList<CraftPart>() {{  // scrap -> forcer*2
+            add(new Recipe(2, new ArrayList<CraftPart>() {{  // scrap -> forcer*2
                 add(new CraftPart(105, 1));
             }}, new CraftPart(106, 2), true));
 
-            add(new Recipe(new ArrayList<CraftPart>() {{  // scrap -> gear*3
+            add(new Recipe(3, new ArrayList<CraftPart>() {{  // scrap -> gear*3
                 add(new CraftPart(105, 1));
             }}, new CraftPart(107, 3), true));
 
-            add(new Recipe(new LinkedList<CraftPart>() {{ //2*metal -> cup
+            add(new Recipe(4, new LinkedList<CraftPart>() {{ //2*metal -> cup
                 add(new CraftPart(103, 2));
             }}, new CraftPart(104, 1), false));
 
-            add(new Recipe(new LinkedList<CraftPart>() {{ //metal -> battery
+            add(new Recipe(5, new LinkedList<CraftPart>() {{ //metal -> battery
                 add(new CraftPart(103, 1));
             }}, new CraftPart(100, 1), false));
 
-            add(new Recipe(new LinkedList<CraftPart>() {{ //ore -> scanner
+            add(new Recipe(6, new LinkedList<CraftPart>() {{ //ore -> scanner
                 add(new CraftPart(102, 1));
             }}, new CraftPart(101, 1), false));
         }};
@@ -84,5 +83,13 @@ public class Recipes {
         }
 
         return result;
+    }
+
+    public Recipe getRecipeWithId(int recipeId) {
+        for (Recipe r : recipes) {
+            if (r.id == recipeId)
+                return r;
+        }
+        return null;
     }
 }

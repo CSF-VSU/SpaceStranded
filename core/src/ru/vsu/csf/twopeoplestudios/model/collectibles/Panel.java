@@ -36,7 +36,7 @@ public class Panel {
         return -1;
     }
 
-    public boolean tryToPut(Collectible collectible) {
+    public boolean add(Collectible collectible) {
         if (Items.getInstance().checkIfCountable(collectible.id)) {
             for (Collectible c : data) {
                 if (c != null && c.id == collectible.id) {
@@ -53,9 +53,35 @@ public class Panel {
         return true;
     }
 
+    public int getItemIndex(int itemId) {
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] != null && data[i].getId() == itemId)
+                return i;
+        }
+        return -1;
+    }
+
     public void drop(int index) {
         if (data[index] == null)
             return;
         data[index] = null;
+    }
+
+    public void take(int index, int amount) {
+        if (data[index].count == amount)
+            drop(index);
+        else {
+            data[index].count -= amount;
+            if (data[index].count == 0)
+                data[index] = null;
+        }
+    }
+
+    public int getItemCount(int id) {
+        for (Collectible c : data) {
+            if (c != null && c.getId() == id)
+                return c.count;
+        }
+        return 0;
     }
 }

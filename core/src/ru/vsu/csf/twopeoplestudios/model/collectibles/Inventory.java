@@ -3,6 +3,9 @@ package ru.vsu.csf.twopeoplestudios.model.collectibles;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperty;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
+import ru.vsu.csf.twopeoplestudios.model.craft.CraftPart;
+import ru.vsu.csf.twopeoplestudios.model.craft.Recipe;
+import ru.vsu.csf.twopeoplestudios.model.craft.Recipes;
 
 public class Inventory extends Panel {
 
@@ -57,5 +60,13 @@ public class Inventory extends Panel {
             if (c != null && c.getId() == id && c.getCount() >= count)
                 return true;
         return false;
+    }
+
+    public void craft(int recipeId) {
+        Recipe r = Recipes.get().getRecipeWithId(recipeId);
+        for (CraftPart part : r.in) {
+            this.take(getItemIndex(part.id), part.count);
+        }
+        this.add(new Collectible(r.out.id, r.out.count));
     }
 }

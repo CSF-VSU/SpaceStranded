@@ -15,6 +15,7 @@ public class UISpriteHolder implements Disposable {
     private static final float HERO_STAT_PROGRESS_BAR_HEIGHT = 20;
 
     public static BitmapFont font32;
+    public static BitmapFont font32Green;
 
     public static TextureAtlas atlasBtns;
     public static TextureAtlas atlasPrgBar;
@@ -29,6 +30,7 @@ public class UISpriteHolder implements Disposable {
     public static Skin skinInvCell;
     public static Skin skinInvBg;
     public static Skin skinLbls;
+    public static Skin skinGreenLbls;
     public static Skin skinCraftItem;
 
     public static TextButton.TextButtonStyle textButtonStyle;
@@ -45,8 +47,13 @@ public class UISpriteHolder implements Disposable {
 
     public static void init() {
         font32 = new BitmapFont(Gdx.files.internal("gfx/fonts/main32.fnt"), false); //подгрузка готового шрифта из файла
+        font32Green = new BitmapFont(Gdx.files.internal("gfx/fonts/main32Green.fnt"), false);
+
         final Label.LabelStyle labelStyle1 = new Label.LabelStyle() {{
             font = font32;
+        }};
+        final Label.LabelStyle greenLabelStyle = new Label.LabelStyle() {{
+            font = font32Green;
         }};
 
         atlasBtns = new TextureAtlas(Gdx.files.internal("gfx/ui/button/button.pack")); //класс для загрузки текстурных паков - здеся атласы
@@ -63,6 +70,9 @@ public class UISpriteHolder implements Disposable {
         skinInvBg = new Skin(atlasInvBg);
         skinLbls = new Skin() {{
             add("default", labelStyle1, Label.LabelStyle.class);
+        }};
+        skinGreenLbls = new Skin() {{
+            add("default", greenLabelStyle, Label.LabelStyle.class);
         }};
         skinCraftItem = new Skin(atlasCraftItem);
 
