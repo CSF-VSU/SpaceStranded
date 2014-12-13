@@ -13,6 +13,11 @@ import ru.vsu.csf.twopeoplestudios.renderers.MapRenderer;
 
 public class Monster extends Character {
 
+    //todo: 5. Monster consts
+    private static final float RESTITUTION = 0.8f;
+    private static final float FRICTION = 0.5f;
+    private static final float DENSITY = 0.8f;
+
     private BehaviourState state;
 
     public Vector2 getPosition() {
@@ -39,9 +44,9 @@ public class Monster extends Character {
 
         FixtureDef fixtureDef = new FixtureDef() {{
             shape = polygonShape;
-            restitution = 0.8f;
-            friction = 0.5f;
-            density = 0.8f;
+            restitution = RESTITUTION;
+            friction = FRICTION;
+            density = DENSITY;
             filter.categoryBits = EntityTypes.ENEMY;
             filter.maskBits = EntityTypes.ENEMY_MASK;
         }};

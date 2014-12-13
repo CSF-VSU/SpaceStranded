@@ -25,13 +25,19 @@ import java.util.ArrayList;
 
 public class Hero extends Character {
 
-    static final float VELOCITY = 8000;
-    static final float RUN_SPEED = 24000;
+    //todo: 4. hero consts
+    private static final float RESTITUTION = 0.0f;
+    private static final float FRICTION = 0.1f;
+    private static final float DENSITY = 0.0f;
+
+    private static final float VELOCITY = 15000; //большим цифрам мы обязаны камере и ее настройкам. Не удивляйся
+    private static final float RUN_SPEED = 45000;
 
     //region Declarations
     //Vector2 heroPosition;
     Vector2 velocity;
 
+    /* todo: 1. 4 флажка, отражающие, какая(-ие) из клавиш нажата(-ы) */
     boolean leftPressed;
     boolean rightPressed;
     boolean upPressed;
@@ -185,8 +191,9 @@ public class Hero extends Character {
             shape = polygonShape;
             filter.categoryBits = EntityTypes.HERO;
             filter.maskBits = EntityTypes.HERO_MASK;
-            //density = 0.4f;
-            //restitution = 0.5f;
+            restitution = RESTITUTION;
+            density = DENSITY;
+            friction = FRICTION;
         }};
 
         body.createFixture(fixtureDef);
@@ -198,40 +205,38 @@ public class Hero extends Character {
     //endregion
 
     //region Update
+    //todo: 2. update
     public void update(float delta) {
         //region Input and movement
+        //todo: 3. handleInputFlags
         handleInputFlags();
 
         Vector2 vel = body.getLinearVelocity();
 
         if (!leftPressed && !rightPressed) {
-            body.setLinearVelocity(vel.x * 0.95f, vel.y);
+            body.setLinearVelocity(vel.x * 0.95f, vel.y); //гасим скорость по х, если не движется влево или вправо
         }
         if (!upPressed && !downPressed) {
-            body.setLinearVelocity(vel.x, vel.y * 0.95f);
+            body.setLinearVelocity(vel.x, vel.y * 0.95f); //то же с вверх-вниз
         }
 
         //величина импульса умножается на delta, чтобы персонаж двигаелся с одинаковой скоростью вне зависимости от фпс
         //todo: распределить импульсы так, чтобы движение по диагонали было с той же скоростью, что и по горизонтали/вертикали
         if (leftPressed && vel.x > -VELOCITY) {
             body.applyLinearImpulse(-RUN_SPEED * delta, 0, body.getPosition().x, body.getPosition().y, true);
-            body.setTransform(body.getPosition().x, body.getPosition().y, 0);
         }
         if (rightPressed && vel.x < VELOCITY) {
             body.applyLinearImpulse(RUN_SPEED * delta, 0, body.getPosition().x, body.getPosition().y, true);
-            body.setTransform(body.getPosition().x, body.getPosition().y, 0);
         }
 
         if (upPressed && vel.y < VELOCITY) {
             body.applyLinearImpulse(0, RUN_SPEED * delta, body.getPosition().x, body.getPosition().y, true);
-            body.setTransform(body.getPosition().x, body.getPosition().y, 0);
         }
         if (downPressed && vel.y > -VELOCITY) {
             body.applyLinearImpulse(0, -RUN_SPEED * delta, body.getPosition().x, body.getPosition().y, true);
-            body.setTransform(body.getPosition().x, body.getPosition().y, 0);
         }
 
-        if (!(leftPressed || rightPressed || downPressed || upPressed)) {
+        if (!(leftPressed || rightPressed || downPressed || upPressed)) { //еще немного магии
             body.setLinearVelocity(vel.x * 0.95f, vel.y * 0.95f);
         }
         //endregion
@@ -281,6 +286,7 @@ public class Hero extends Character {
 
     //region Handling input
     private void handleInputFlags() {
+        //todo: velocity - вектор скорости
         if (leftPressed)
             velocity.set(-1, velocity.y);
         if (rightPressed)
