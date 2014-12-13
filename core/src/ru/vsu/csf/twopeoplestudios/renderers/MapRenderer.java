@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -24,7 +25,7 @@ import ru.vsu.csf.twopeoplestudios.model.contactListener.WorldContactListener;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
 import ru.vsu.csf.twopeoplestudios.model.world.MapTile;
 
-public class MapRenderer {
+public class MapRenderer  extends OrthogonalTiledMapRenderer{
 
     private static final int CELL_SIZE = 64;
 
@@ -35,14 +36,13 @@ public class MapRenderer {
 
     private Box2DDebugRenderer debugRenderer;
     public OrthographicCamera camera;
-    public OrthographicCamera bgcamera;
     private World world;
 
     //region backgroundDrawingVars
     private TiledMap tiledMap;
-    private MapLayers layers;
-    private TiledMapRenderer tiledMapRenderer;
-    private MapTile[][] mapScheme;
+  //  private MapLayers layers;
+   // private TiledMapRenderer tiledMapRenderer;
+   // private MapTile[][] mapScheme;
     //endregion
 
 
@@ -50,20 +50,25 @@ public class MapRenderer {
 
     TextureRegion heroTexture;
 
-    public MapRenderer() {
+    public MapRenderer(TiledMap tiledMap) {
+        super(tiledMap);
+        this.tiledMap = tiledMap;
         //region backgroundDrawing
 
-        mapScheme = ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().map;
+       /* mapScheme = ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().map;
         tiledMap = new TiledMap();
         int mapWidth = mapScheme.length;
         int mapHeight = mapScheme[0].length;
         TextureRegion water = new TextureRegion(new Texture(new FileHandle("gfx/tiles/water.png")));
         TextureRegion land = new TextureRegion(new Texture(new FileHandle("gfx/tiles/grass.png")));
         TextureRegion sand = new TextureRegion(new Texture(new FileHandle("gfx/tiles/sand.png")));
+        TextureRegion tree = new TextureRegion(new Texture(new FileHandle("gfx/tiles/tree-icon.png")));
+
 
         TiledMapTile waterTile = new StaticTiledMapTile(water);
         TiledMapTile landTile = new StaticTiledMapTile(land);
         TiledMapTile sandTile = new StaticTiledMapTile(sand);
+        TiledMapTile treeTile = new StaticTiledMapTile(tree);
 
         TiledMapTileLayer layer = new TiledMapTileLayer(128, 64, 64, 64);
         MapLayers layers = tiledMap.getLayers();
@@ -86,15 +91,13 @@ public class MapRenderer {
                 layer.setCell(i, j, cell);
             }
         layers.add(layer);
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap); */
         //endregion
 
         debugRenderer = new Box2DDebugRenderer();
 
 
-        /*bgcamera = new OrthographicCamera();
-        bgcamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        bgcamera.update();*/
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new WorldContactListener());
@@ -112,9 +115,17 @@ public class MapRenderer {
 
     Vector3 lerpTarget = new Vector3();
     public void render(Batch batch, float delta) {
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
+        setView(camera);
+        beginRender();
+        for(MapLayer layer : tiledMap.getLayers()) {
+            if (layer.isVisible())
+                if (layer instanceof TiledMapTileLayer) {
+                    renderTileLayer((TiledMapTileLayer)layer);
+            }
+        }
+        endRender();
 
+        //region RenderObjects
         debugRenderer.render(world, camera.combined);
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
@@ -143,8 +154,6 @@ public class MapRenderer {
                 map.hero.getHeroPosition().y * CELL_SIZE,
                 0), 2f * delta);
         camera.update();
-       //bgcamera.position.lerp(lerpTarget.set(map.hero.getHeroPosition().x, map.hero.getHeroPosition().y, 0), 2f * delta);
-
-      //  bgcamera.update();
+        //endregion
     }
 }
