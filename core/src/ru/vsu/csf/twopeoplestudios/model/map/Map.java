@@ -1,10 +1,11 @@
 package ru.vsu.csf.twopeoplestudios.model.map;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
+import ru.vsu.csf.twopeoplestudios.model.characters.monsters.Monster;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
+import ru.vsu.csf.twopeoplestudios.renderers.MapRenderer;
 
 import java.util.LinkedList;
 
@@ -12,6 +13,7 @@ public class Map {
 
     World world;
 
+    public LinkedList<Monster> monsters;
     public LinkedList<Herb> herbs;
     public LinkedList<Body> toDestroy;
 
@@ -21,25 +23,44 @@ public class Map {
         this.world = world;
         hero = new Hero(world, this);
         herbs = new LinkedList<Herb>() {{
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition(), world));
+            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+        }};
+        monsters = new LinkedList<Monster>() {{
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
         }};
         toDestroy = new LinkedList<Body>();
     }
@@ -51,6 +72,8 @@ public class Map {
         toDestroy.clear();
 
         hero.update(delta);
+        for (Monster m : monsters)
+            m.update(delta);
     }
 
     public void destroyHerb(Herb herb) {

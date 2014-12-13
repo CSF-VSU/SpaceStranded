@@ -11,6 +11,7 @@ public class DesktopLauncher {
         config.width = Values.SCREEN_WIDTH;
         config.height = Values.SCREEN_HEIGHT;
         config.title = "Space Stranded";
+        config.useGL30 = false;
         new LwjglApplication(new SpaceStranded(), config);
     }
 }

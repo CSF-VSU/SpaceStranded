@@ -5,9 +5,11 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
+import ru.vsu.csf.twopeoplestudios.model.characters.monsters.Monster;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HerbUserData;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
+import ru.vsu.csf.twopeoplestudios.model.weapons.HeroAttack;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -30,7 +32,27 @@ public class WorldContactListener implements ContactListener {
             hero.set(((HeroUserData) firstData).getParent());
             herb.set(((HerbUserData) secondData).getParent());
             return true;
-        } else return false;
+        } else
+            return false;
+    }
+
+    private boolean ifHeroAttacksEnemy(Contact contact, AtomicReference<Monster> monster, AtomicReference<HeroAttack> attack){
+        Object firstData = contact.getFixtureA().getBody().getUserData();
+        Object secondData = contact.getFixtureB().getBody().getUserData();
+
+        if (firstData == null || secondData == null)
+            return false;
+
+        if (firstData.getClass().equals(HeroAttack.class) && secondData.getClass().equals(Monster.class)) {
+            attack.set((HeroAttack) firstData);
+            monster.set((Monster) secondData);
+            return true;
+        } else if (firstData.getClass().equals(Monster.class) && secondData.getClass().equals(HeroAttack.class)) {
+            monster.set((Monster) firstData);
+            attack.set((HeroAttack) secondData);
+            return true;
+        } else
+            return false;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -39,10 +61,14 @@ public class WorldContactListener implements ContactListener {
     public void beginContact(Contact contact) {
         AtomicReference<Hero> hero = new AtomicReference<Hero>(); //штуки вместо ref-передачи аргументов в методы
         AtomicReference<Herb> herb = new AtomicReference<Herb>();
+        AtomicReference<Monster> monster = new AtomicReference<Monster>();
+        AtomicReference<HeroAttack> attack = new AtomicReference<HeroAttack>();
 
         if (ifHeroStandsOnHerb(contact, hero, herb)) {
             hero.get().onTouchHerb(herb.get());
-            //System.out.println("Was contact!");
+        }
+        else if (ifHeroAttacksEnemy(contact, monster, attack)) {
+            monster.get().beAttacked();
         }
     }
 
@@ -53,7 +79,6 @@ public class WorldContactListener implements ContactListener {
 
         if (ifHeroStandsOnHerb(contact, hero, herb)) {
             hero.get().onStopTouchingHerb();
-            //System.out.println("Was contact!");
         }
     }
 

@@ -155,7 +155,7 @@ public class World {
 
     public Vector2 getRandomPosition() {
         boolean ok = false;
-        Vector2 result = new Vector2();
+        Vector2 result;
         do {
             result = new Vector2(random.nextInt(2*size), random.nextInt(size));
             if (map[(int)result.x][(int)result.y].type != TerrainType.WATER) {

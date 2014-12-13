@@ -3,7 +3,6 @@ package ru.vsu.csf.twopeoplestudios.model.characters;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 //import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -18,17 +17,19 @@ import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.KnownHerb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
+import ru.vsu.csf.twopeoplestudios.model.weapons.*;
 import ru.vsu.csf.twopeoplestudios.model.world.World;
+import ru.vsu.csf.twopeoplestudios.renderers.MapRenderer;
 
 import java.util.ArrayList;
 
-public class Hero {
+public class Hero extends Character {
 
-    static final float VELOCITY = 5f;
-    static final float RUN_SPEED = 25f;
+    static final float VELOCITY = 8000;
+    static final float RUN_SPEED = 24000;
 
     //region Declarations
-    Vector2 heroPosition;
+    //Vector2 heroPosition;
     Vector2 velocity;
 
     boolean leftPressed;
@@ -36,15 +37,11 @@ public class Hero {
     boolean upPressed;
     boolean downPressed;
 
-    com.badlogic.gdx.physics.box2d.World world;
     Map map;
-    Body body;
 
-    private int maxHp;
     private int maxFl;
     private int maxSt;
 
-    private float hp;
     private float hunger;
     private float stamina;
 
@@ -59,11 +56,10 @@ public class Hero {
     ArrayList<KnownHerb> knownHerbs;
     ArrayList<Effect> activeEffects;
 
+    HeroAttack attack;
     //endregion
 
     //region Getters/Setters
-
-
     public ArrayList<Effect> getActiveEffects() {
         return activeEffects;
     }
@@ -130,7 +126,7 @@ public class Hero {
 
     //region Creating
     public Hero(com.badlogic.gdx.physics.box2d.World world, Map map) {
-        heroPosition = World.getInstance().getRandomPosition();
+        charPosition = World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE);
         velocity = new Vector2(0, 0);
         leftPressed = false;
         rightPressed = false;
@@ -168,24 +164,29 @@ public class Hero {
 
         knownHerbs = new ArrayList<KnownHerb>();
         activeEffects = new ArrayList<Effect>();
+
+        facing = Facing.DOWN;
+        attack = new HeroAttack();
     }
 
     private void createBody() {
         BodyDef bodyDef = new BodyDef() {{
             type = BodyType.DynamicBody; //динамическое = можно воздействовать на него силами или импульсами
-            position.set(heroPosition);
+            position.set(charPosition);
         }};
 
         body = world.createBody(bodyDef);
 
         final PolygonShape polygonShape = new PolygonShape() {{
-            setAsBox(0.5f, 0.5f);
+            setAsBox(MapRenderer.CELL_SIZE / 2f, MapRenderer.CELL_SIZE / 2f);
         }};
 
         FixtureDef fixtureDef = new FixtureDef() {{
             shape = polygonShape;
             filter.categoryBits = EntityTypes.HERO;
             filter.maskBits = EntityTypes.HERO_MASK;
+            //density = 0.4f;
+            //restitution = 0.5f;
         }};
 
         body.createFixture(fixtureDef);
@@ -204,10 +205,10 @@ public class Hero {
         Vector2 vel = body.getLinearVelocity();
 
         if (!leftPressed && !rightPressed) {
-            body.setLinearVelocity(vel.x * 0.85f, vel.y);
+            body.setLinearVelocity(vel.x * 0.95f, vel.y);
         }
         if (!upPressed && !downPressed) {
-            body.setLinearVelocity(vel.x, vel.y * 0.85f);
+            body.setLinearVelocity(vel.x, vel.y * 0.95f);
         }
 
         //величина импульса умножается на delta, чтобы персонаж двигаелся с одинаковой скоростью вне зависимости от фпс
@@ -231,12 +232,21 @@ public class Hero {
         }
 
         if (!(leftPressed || rightPressed || downPressed || upPressed)) {
-            body.setLinearVelocity(vel.x * 0.91f, vel.y * 0.91f);
+            body.setLinearVelocity(vel.x * 0.95f, vel.y * 0.95f);
         }
         //endregion
 
         regen(delta);
         activeEffectsUpdate(delta);
+        updateAttack(delta);
+    }
+
+    private void updateAttack(float delta) {
+        if (attack.decreaseTime(delta)) {
+            attack.destroy();
+        }
+        else
+            attack.updatePosition(body.getPosition());
     }
 
     private void activeEffectsUpdate(float delta) {
@@ -366,5 +376,12 @@ public class Hero {
     public void addActiveEffect(Effect effect) {
         this.activeEffects.add(effect);
         effect.onAttach(this);
+    }
+
+    public void attack( ) {
+        if (attack.isAlive())
+            return;
+
+        attack.init(HeroAttacks.attacks.get(MeleeAttackType.SLASH_ATTACK).get(facing));
     }
 }

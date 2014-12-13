@@ -17,16 +17,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import ru.vsu.csf.twopeoplestudios.model.characters.monsters.Monster;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Items;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.WorldContactListener;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
+import ru.vsu.csf.twopeoplestudios.model.weapons.HeroAttacks;
 import ru.vsu.csf.twopeoplestudios.model.world.MapTile;
 
 public class MapRenderer {
 
-    private static final int CELL_SIZE = 64;
+    public static final int CELL_SIZE = 64;
 
     public Map map;
 
@@ -35,7 +37,6 @@ public class MapRenderer {
 
     private Box2DDebugRenderer debugRenderer;
     public OrthographicCamera camera;
-    public OrthographicCamera bgcamera;
     private World world;
 
     //region backgroundDrawingVars
@@ -45,10 +46,8 @@ public class MapRenderer {
     private MapTile[][] mapScheme;
     //endregion
 
-
-
-
     TextureRegion heroTexture;
+    TextureRegion monsterTexture;
 
     public MapRenderer() {
         //region backgroundDrawing
@@ -89,62 +88,60 @@ public class MapRenderer {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         //endregion
 
-        debugRenderer = new Box2DDebugRenderer();
-
-
-        /*bgcamera = new OrthographicCamera();
-        bgcamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        bgcamera.update();*/
+        debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new WorldContactListener());
 
-        //herbs = Herbs.getInstance();
+        HeroAttacks.init(world);
+
+        herbs = Herbs.getInstance();
         map = new Map(world);
         items = Items.getInstance();
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(map.hero.getHeroPosition().x * CELL_SIZE,
-                            map.hero.getHeroPosition().y * CELL_SIZE, 0);
-        //camera.position.set(0,0,0);
+        camera.position.set(map.hero.getHeroPosition().x, map.hero.getHeroPosition().y, 0);
+
         heroTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/hero.png")));
+        monsterTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/monster.png")));
     }
 
     Vector3 lerpTarget = new Vector3();
     public void render(Batch batch, float delta) {
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 
-        debugRenderer.render(world, camera.combined);
-        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+        map.update(delta);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        map.update(delta);
-
         for (Herb h : map.herbs) {
             batch.draw(items.getItemTexture(h.getId()),
-                    h.getPosition().x * CELL_SIZE,
-                    h.getPosition().y * CELL_SIZE,
-                    1.5f * CELL_SIZE,
-                    1.5f * CELL_SIZE);
+                    h.getPosition().x,
+                    h.getPosition().y);
+        }
+
+        for (Monster m : map.monsters) {
+            batch.draw(monsterTexture,
+                    m.getPosition().x - CELL_SIZE,
+                    m.getPosition().y - CELL_SIZE/2f);
         }
 
         batch.draw(heroTexture,
-                (map.hero.getHeroPosition().x - 0.5f) * CELL_SIZE,
-                (map.hero.getHeroPosition().y - 0.5f) * CELL_SIZE,
-                1.7f * CELL_SIZE,
-                (18 * 1.7f / 11f) * CELL_SIZE);
+                (map.hero.getHeroPosition().x - CELL_SIZE),
+                 map.hero.getHeroPosition().y - CELL_SIZE/2f);
+
         batch.end();
 
         camera.position.lerp(lerpTarget.set(
-                map.hero.getHeroPosition().x * CELL_SIZE,
-                map.hero.getHeroPosition().y * CELL_SIZE,
+                map.hero.getHeroPosition().x,
+                map.hero.getHeroPosition().y,
                 0), 2f * delta);
         camera.update();
-       //bgcamera.position.lerp(lerpTarget.set(map.hero.getHeroPosition().x, map.hero.getHeroPosition().y, 0), 2f * delta);
 
-      //  bgcamera.update();
+        debugRenderer.render(world, camera.combined);
     }
 }
