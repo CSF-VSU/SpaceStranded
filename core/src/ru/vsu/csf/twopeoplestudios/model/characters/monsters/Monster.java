@@ -44,9 +44,9 @@ public class Monster extends Character {
 
         FixtureDef fixtureDef = new FixtureDef() {{
             shape = polygonShape;
-            restitution = RESTITUTION;
-            friction = FRICTION;
-            density = DENSITY;
+//            restitution = RESTITUTION;
+//            friction = FRICTION;
+//            density = DENSITY;
             filter.categoryBits = EntityTypes.ENEMY;
             filter.maskBits = EntityTypes.ENEMY_MASK;
         }};

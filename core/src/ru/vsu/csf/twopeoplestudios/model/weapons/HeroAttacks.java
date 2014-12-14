@@ -57,12 +57,12 @@ public class HeroAttacks {
                 new Vector2(-30, -45),
                 new Vector2(-45, 0)
         });
-        add(world, MeleeAttackType.SLASH_ATTACK, Facing.UP, new Vector2[]{ new Vector2(-40, 0), new Vector2(40,0), new Vector2(0,  60) });
-        add(world, MeleeAttackType.SLASH_ATTACK, Facing.LEFT,  new Vector2[]{ new Vector2(0, 40), new Vector2(0, -40), new Vector2(60, 0) });
-        add(world, MeleeAttackType.SLASH_ATTACK, Facing.RIGHT,  new Vector2[]{ new Vector2(0, 40), new Vector2(0, -40), new Vector2(-60, 0) });
-//        add(world, MeleeAttackType.SLASH_ATTACK, Facing.DOWN, new Vector2[]{ new Vector2(-40, 0), new Vector2(40,0), new Vector2(0, -40) });
-//        add(world, MeleeAttackType.SLASH_ATTACK, Facing.DOWN, new Vector2[]{ new Vector2(-40, 0), new Vector2(40,0), new Vector2(0, -40) });
-//        add(world, MeleeAttackType.SLASH_ATTACK, Facing.DOWN, new Vector2[]{ new Vector2(-40, 0), new Vector2(40,0), new Vector2(0, -40) });
-//        add(world, MeleeAttackType.SLASH_ATTACK, Facing.DOWN, new Vector2[]{ new Vector2(-40, 0), new Vector2(40,0), new Vector2(0, -40) });
+        add(world, MeleeAttackType.SLASH_ATTACK, Facing.UP, new Vector2[]{ new Vector2(-40, 0), new Vector2(40,0), new Vector2(0, 70) });
+        add(world, MeleeAttackType.SLASH_ATTACK, Facing.LEFT,  new Vector2[]{ new Vector2(0, 40), new Vector2(0, -40), new Vector2(-90, 0) });
+        add(world, MeleeAttackType.SLASH_ATTACK, Facing.RIGHT,  new Vector2[]{ new Vector2(0, 40), new Vector2(0, -40), new Vector2(90, 0) });
+        add(world, MeleeAttackType.SLASH_ATTACK, Facing.DOWN_LEFT, new Vector2[]{ new Vector2(-30, 30), new Vector2(30,-30), new Vector2(-60, -60) });
+        add(world, MeleeAttackType.SLASH_ATTACK, Facing.DOWN_RIGHT, new Vector2[]{ new Vector2(30, 30), new Vector2(-30,-30), new Vector2(60, -60) });
+        add(world, MeleeAttackType.SLASH_ATTACK, Facing.UP_LEFT, new Vector2[]{ new Vector2(30, 30), new Vector2(-30,-30), new Vector2(-60, 60) });
+        add(world, MeleeAttackType.SLASH_ATTACK, Facing.UP_RIGHT, new Vector2[]{ new Vector2(-30, 30), new Vector2(30,-30), new Vector2(60, 60) });
     }
 }
