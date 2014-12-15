@@ -17,13 +17,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import ru.vsu.csf.twopeoplestudios.Values;
 import ru.vsu.csf.twopeoplestudios.model.characters.monsters.Monster;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Items;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.WorldContactListener;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
+import ru.vsu.csf.twopeoplestudios.model.weapons.FlyingProjectile;
 import ru.vsu.csf.twopeoplestudios.model.weapons.HeroAttacks;
+import ru.vsu.csf.twopeoplestudios.model.weapons.Weapons;
 import ru.vsu.csf.twopeoplestudios.model.world.MapTile;
 
 public class MapRenderer {
@@ -130,6 +133,12 @@ public class MapRenderer {
                     m.getPosition().y - CELL_SIZE/2f);
         }
 
+        for (FlyingProjectile f : map.projectiles) {
+            batch.draw(Weapons.getInstance().getTextureRegion(f.id),
+                    f.body.getPosition().x,
+                    f.body.getPosition().y);
+        }
+
         batch.draw(heroTexture,
                 (map.hero.getHeroPosition().x - CELL_SIZE),
                  map.hero.getHeroPosition().y - CELL_SIZE/2f);
@@ -143,5 +152,9 @@ public class MapRenderer {
         camera.update();
 
         debugRenderer.render(world, camera.combined);
+    }
+
+    public void updateMousePos(int screenX, int screenY) {
+        Values.mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
     }
 }

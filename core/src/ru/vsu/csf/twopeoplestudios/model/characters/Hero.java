@@ -2,7 +2,6 @@ package ru.vsu.csf.twopeoplestudios.model.characters;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-//import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -169,7 +168,7 @@ public class Hero extends Character {
         inventory.add(new Collectible(1, 5));
         inventory.add(new Collectible(2, 5));
 
-        //panel.add(new MeleeWeapon(200, this));
+        panel.add(new RangedWeapon(200, this, map));
         panel.add(new MeleeWeapon(250, this));
 
         knownHerbs = new ArrayList<KnownHerb>();
@@ -209,10 +208,8 @@ public class Hero extends Character {
     //endregion
 
     //region Update
-    //todo: 2. update
     public void update(float delta) {
         //region Input and movement
-        //todo: 3. handleInputFlags
         handleInputFlags();
 
         Vector2 vel = body.getLinearVelocity();
@@ -422,6 +419,10 @@ public class Hero extends Character {
 
         if (panel.getSelectedItem() instanceof MeleeWeapon) {
             MeleeWeapon weapon = (MeleeWeapon) panel.getSelectedItem();
+            weapon.attack();
+        }
+        else if (panel.getSelectedItem() instanceof RangedWeapon) {
+            RangedWeapon weapon = (RangedWeapon) panel.getSelectedItem();
             weapon.attack();
         }
     }

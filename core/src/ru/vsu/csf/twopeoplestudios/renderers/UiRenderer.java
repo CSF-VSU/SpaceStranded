@@ -46,10 +46,10 @@ public class UiRenderer {
         return isShowingInventory;
     }
 
-    public UiRenderer(Hero hero) {
+    public UiRenderer(Hero hero, GameStage stage) {
         this.hero = hero;
 
-        stage = new GameStage(hero, this);
+        this.stage = stage;// = new GameStage(hero, this);
         Gdx.input.setInputProcessor(stage);
     }
 

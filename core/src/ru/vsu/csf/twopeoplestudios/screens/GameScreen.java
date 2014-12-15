@@ -3,10 +3,12 @@ package ru.vsu.csf.twopeoplestudios.screens;
 import com.badlogic.gdx.Game;
 import ru.vsu.csf.twopeoplestudios.renderers.MapRenderer;
 import ru.vsu.csf.twopeoplestudios.renderers.UiRenderer;
+import ru.vsu.csf.twopeoplestudios.screens.stages.GameStage;
 
 public class GameScreen extends AbstractScreen {
     private MapRenderer renderer;
     private UiRenderer uiRenderer;
+    private GameStage stage;
 
     public GameScreen(Game game) {
         super(game);
@@ -17,7 +19,9 @@ public class GameScreen extends AbstractScreen {
         super.show();
 
         renderer = new MapRenderer();
-        uiRenderer = new UiRenderer(renderer.map.hero);
+        stage = new GameStage();
+        uiRenderer = new UiRenderer(renderer.map.hero, stage);
+        stage.init(renderer.map.hero, uiRenderer, renderer);
     }
 
     @Override

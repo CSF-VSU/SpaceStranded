@@ -15,7 +15,6 @@ public class Items {
     private static final int RANGED_WEAPON_ID = 200;
     private static final int MELEE_WEAPON_ID = 250;
 
-
     private static Items instance;
 
     private HashMap<Integer, Item> items;

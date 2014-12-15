@@ -11,6 +11,7 @@ import ru.vsu.csf.twopeoplestudios.Values;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
 import ru.vsu.csf.twopeoplestudios.model.craft.Recipe;
 import ru.vsu.csf.twopeoplestudios.model.craft.Recipes;
+import ru.vsu.csf.twopeoplestudios.renderers.MapRenderer;
 import ru.vsu.csf.twopeoplestudios.renderers.UiRenderer;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.CraftRecipe;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
@@ -21,6 +22,7 @@ public class GameStage extends Stage {
 
     private Hero hero;
     private UiRenderer uiRenderer;
+    private MapRenderer mapRenderer;
 
     private Table mainTable;
     private Table craftingTable;
@@ -33,11 +35,13 @@ public class GameStage extends Stage {
     private Table scrollTable;
     private ScrollPane pane;
 
-    public GameStage(final Hero hero, UiRenderer uiRenderer) {
-
+    public void init(final Hero hero, UiRenderer uiRenderer, MapRenderer mapRenderer) {
         this.hero = hero;
         this.uiRenderer = uiRenderer;
+        this.mapRenderer = mapRenderer;
+    }
 
+    public GameStage() {
 //        setDebugAll(true);
         mainTable = new Table() {{
             setBounds(0, 0, Values.SCREEN_WIDTH, Values.SCREEN_HEIGHT);
@@ -184,20 +188,25 @@ public class GameStage extends Stage {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (!super.touchDown(screenX, screenY, pointer, button))
-        switch (button) {
-            case Input.Buttons.LEFT:
-                if (uiRenderer.isShowingInventory()) {
-                    uiRenderer.onClick(screenX, Values.SCREEN_HEIGHT - screenY);
-                }
-                else
-                    hero.usePanelItem();
-                break;
-            case Input.Buttons.RIGHT:
-                if (uiRenderer.isShowingInventory()) {
-                    uiRenderer.onRMBClick(screenX, Values.SCREEN_HEIGHT - screenY);
-                }
-                break;
+        if (!super.touchDown(screenX, screenY, pointer, button)) {
+
+            screenY = Values.SCREEN_HEIGHT - screenY;
+
+            switch (button) {
+                case Input.Buttons.LEFT:
+                    if (uiRenderer.isShowingInventory()) {
+                        uiRenderer.onClick(screenX, screenY);
+                    } else {
+                        mapRenderer.updateMousePos(screenX, Values.SCREEN_HEIGHT - screenY);
+                        hero.usePanelItem();
+                    }
+                    break;
+                case Input.Buttons.RIGHT:
+                    if (uiRenderer.isShowingInventory()) {
+                        uiRenderer.onRMBClick(screenX, screenY);
+                    }
+                    break;
+            }
         }
         return true;
     }
