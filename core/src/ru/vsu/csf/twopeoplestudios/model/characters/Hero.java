@@ -291,14 +291,42 @@ public class Hero extends Character {
     //region Handling input
     private void handleInputFlags() {
         //todo: velocity - вектор скорости
-        if (leftPressed)
+        if (leftPressed) {
+            if (facing == Facing.DOWN)
+                facing = Facing.DOWN_LEFT;
+            else if (facing == Facing.UP)
+                facing = Facing.UP_LEFT;
+            else
+                facing = Facing.LEFT;
             velocity.set(-1, velocity.y);
-        if (rightPressed)
+        }
+        if (rightPressed) {
+            if (facing == Facing.DOWN)
+                facing = Facing.DOWN_RIGHT;
+            else if (facing == Facing.UP)
+                facing = Facing.UP_RIGHT;
+            else
+                facing = Facing.RIGHT;
             velocity.set(1, velocity.y);
-        if (upPressed)
+        }
+        if (upPressed) {
+            if (facing == Facing.LEFT)
+                facing = Facing.UP_LEFT;
+            else if (facing == Facing.RIGHT)
+                facing = Facing.UP_RIGHT;
+            else
+                facing = Facing.UP;
             velocity.set(velocity.x, 1);
-        if (downPressed)
+        }
+        if (downPressed) {
+            if (facing == Facing.LEFT)
+            facing = Facing.DOWN_LEFT;
+            else if (facing == Facing.RIGHT)
+                facing = Facing.DOWN_RIGHT;
+            else
+                facing = Facing.DOWN;
             velocity.set(velocity.x, -1);
+        }
     }
 
     public void keyDown(int keycode) {
