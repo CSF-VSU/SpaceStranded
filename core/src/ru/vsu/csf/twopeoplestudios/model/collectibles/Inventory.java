@@ -1,5 +1,6 @@
 package ru.vsu.csf.twopeoplestudios.model.collectibles;
 
+import com.badlogic.gdx.math.Vector2;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperty;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
@@ -68,5 +69,23 @@ public class Inventory extends Panel {
             this.take(getItemIndex(part.id), part.count);
         }
         this.add(new Collectible(r.out.id, r.out.count));
+    }
+
+    @Override
+    public boolean isSelectedCellEmpty() {
+        return data[selectedRow * WIDTH + selectedColumn] == null;
+    }
+
+    public Vector2 getSelectedIndexes() {
+        return new Vector2(selectedColumn, selectedRow);
+    }
+
+    @Override
+    public void destroyItemInSelectedIndex() {
+        data[selectedRow * WIDTH + selectedColumn] = null;
+    }
+
+    public void putInSelectedCell(Collectible item) {
+        data[selectedRow * WIDTH + selectedColumn] = item;
     }
 }

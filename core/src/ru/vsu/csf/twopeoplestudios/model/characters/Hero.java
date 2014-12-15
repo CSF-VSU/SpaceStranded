@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class Hero extends Character {
 
-    //todo: 4. hero consts
     private static final float RESTITUTION = 0.0f;
     private static final float FRICTION = 0.1f;
     private static final float DENSITY = 0.0f;
@@ -34,10 +33,8 @@ public class Hero extends Character {
     private static final float RUN_SPEED = 45000;
 
     //region Declarations
-    //Vector2 heroPosition;
     Vector2 velocity;
 
-    /* todo: 1. 4 флажка, отражающие, какая(-ие) из клавиш нажата(-ы) */
     boolean leftPressed;
     boolean rightPressed;
     boolean upPressed;

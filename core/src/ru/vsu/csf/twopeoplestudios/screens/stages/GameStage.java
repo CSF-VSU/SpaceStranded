@@ -1,6 +1,5 @@
 package ru.vsu.csf.twopeoplestudios.screens.stages;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,7 +15,6 @@ import ru.vsu.csf.twopeoplestudios.renderers.UiRenderer;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.CraftRecipe;
 import ru.vsu.csf.twopeoplestudios.renderers.ui.UISpriteHolder;
 
-import java.util.*;
 import java.util.List;
 
 public class GameStage extends Stage {
@@ -156,7 +154,7 @@ public class GameStage extends Stage {
             case '8':
             case '9':
             case '0':
-                hero.getPanel().selectItem(Integer.parseInt(String.valueOf(character)));
+                hero.getPanel().selectItemFromKey(Integer.parseInt(String.valueOf(character)));
                 break;
             default:
                 hero.keyTyped(character);
@@ -177,7 +175,11 @@ public class GameStage extends Stage {
     //region Handling input
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return super.touchDragged(screenX, screenY, pointer);
+        if (!super.touchDragged(screenX, screenY, pointer)) {
+            if (uiRenderer.isDraggingItem())
+                uiRenderer.updateDraggingItem(screenX, Values.SCREEN_HEIGHT - screenY);
+        }
+        return true;
     }
 
     @Override
@@ -202,7 +204,10 @@ public class GameStage extends Stage {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return super.touchUp(screenX, screenY, pointer, button);
+        if (!super.touchUp(screenX, screenY, pointer, button)) {
+            uiRenderer.onMouseUp();
+        }
+        return true;
     }
 
     @Override

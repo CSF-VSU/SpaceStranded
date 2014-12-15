@@ -2,6 +2,9 @@ package ru.vsu.csf.twopeoplestudios.model.collectibles;
 
 public class Panel {
 
+    public static final int WIDTH = 10;
+    public static final int HEIGHT = 1;
+
     protected Collectible[] data;
     protected int selectedIndex;
 
@@ -13,7 +16,11 @@ public class Panel {
         data = new Collectible[10];
     }
 
-    public void selectItem(int index) {
+    public void setSelectedIndex(int selectedIndex) {
+        this.selectedIndex = selectedIndex;
+    }
+
+    public void selectItemFromKey(int index) {
         index--;
         if (index == -1)
             index = 9;
@@ -83,5 +90,17 @@ public class Panel {
                 return c.count;
         }
         return 0;
+    }
+
+    public boolean isSelectedCellEmpty() {
+        return data[selectedIndex] == null;
+    }
+
+    public void destroyItemInSelectedIndex() {
+        data[selectedIndex] = null;
+    }
+
+    public void putInSelectedCell(Collectible item) {
+        data[selectedIndex] = item;
     }
 }

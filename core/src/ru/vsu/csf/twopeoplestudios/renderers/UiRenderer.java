@@ -7,9 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.vsu.csf.twopeoplestudios.Values;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
 import ru.vsu.csf.twopeoplestudios.model.characters.effects.EffectSpriteHolder;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
-import ru.vsu.csf.twopeoplestudios.model.collectibles.Items;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.*;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperty;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.model.craft.Recipes;
@@ -79,6 +77,24 @@ public class UiRenderer {
                         PANEL_MARGIN_BOTTOM,
                         PANEL_CELL_SIZE, PANEL_CELL_SIZE);
         }
+
+        int pnl_cnt = 0;
+        for (Collectible c : hero.getPanel().getData()) {
+            if (c != null) {
+                uiBatch.draw(Items.getInstance().getItemTexture(c.getId()),
+                        PANEL_MARGIN_LEFT + pnl_cnt*PANEL_CELL_SIZE,
+                        PANEL_MARGIN_BOTTOM,
+                        PANEL_CELL_SIZE,
+                        PANEL_CELL_SIZE);
+
+                if (Items.getInstance().checkIfCountable(c.getId()))
+                    UISpriteHolder.font32.draw(uiBatch, "x" + c.getCount(),
+                            PANEL_MARGIN_LEFT + pnl_cnt * (PANEL_CELL_SIZE) + 20,
+                            PANEL_MARGIN_BOTTOM + 20);
+
+                pnl_cnt++;
+            }
+        }
         //endregion
 
         //region Inventory
@@ -119,6 +135,14 @@ public class UiRenderer {
                     i++;
                     j = 0;
                 }
+            }
+
+            if (isDraggingItem()) {
+                uiBatch.draw(Items.getInstance().getItemTexture(draggedItem.getId()),
+                        draggedItemPos.x,
+                        draggedItemPos.y,
+                        INVENTORY_CELL_SIZE,
+                        INVENTORY_CELL_SIZE);
             }
 
             //region Info subpanel
@@ -222,7 +246,7 @@ public class UiRenderer {
         uiBatch.end();
     }
 
-    private Vector2 getInventoryCell(int screenX, int screenY) {
+    private Vector2 getInventoryCell(float screenX, float screenY) {
         Vector2 result = new Vector2();
 
         screenX -= INVENTORY_MARGIN_LEFT;
@@ -237,14 +261,113 @@ public class UiRenderer {
         return (result.x < Inventory.WIDTH && result.y < Inventory.HEIGHT)? result : null;
     }
 
+    private Vector2 getPanelCell(float screenX, float screenY) {
+        Vector2 result = new Vector2();
+
+        screenX -= PANEL_MARGIN_LEFT;
+        screenY -= PANEL_MARGIN_BOTTOM;
+
+        if (screenX < 0 || screenY < 0)
+            return null;
+
+        result.x = (int) (screenX / PANEL_CELL_SIZE);
+        result.y = (int) (screenY / PANEL_CELL_SIZE);
+
+        return (result.x < Panel.WIDTH && result.y < Panel.HEIGHT)? result : null;
+    }
+
+    private boolean isDraggingItem;
+    private Vector2 draggedItemShift;
+    private Vector2 draggedItemPos;
+    private Collectible draggedItem;
+    private Vector2 oldDraggingItemPos;
+    private boolean draggedItemFromInventory; //false is for panel
+
+    public boolean isDraggingItem() {
+        return isDraggingItem;
+    }
+
     public boolean onClick(int screenX, int screenY) {
         Vector2 cell = getInventoryCell(screenX, screenY);
 
         if (cell != null) {
             hero.getInventory().selectItem((int) cell.x, (int) cell.y);
+            if (!hero.getInventory().isSelectedCellEmpty()) {
+                isDraggingItem = true;
+
+                oldDraggingItemPos = hero.getInventory().getSelectedIndexes();
+
+                draggedItemPos = hero.getInventory().getSelectedIndexes().scl(INVENTORY_CELL_SIZE).add(INVENTORY_MARGIN_LEFT, INVENTORY_MARGIN_BOTTOM);
+                draggedItemShift = new Vector2(screenX, screenY).sub(draggedItemPos);
+
+                draggedItem = hero.getInventory().getSelectedItem();
+                hero.getInventory().destroyItemInSelectedIndex();
+
+                draggedItemFromInventory = true;
+            }
+            return true;
+        }
+
+        cell = getPanelCell(screenX, screenY);
+        if (cell != null) {
+            hero.getPanel().setSelectedIndex((int) cell.x);
+            if (!hero.getPanel().isSelectedCellEmpty()) {
+                isDraggingItem = true;
+
+                oldDraggingItemPos = new Vector2(hero.getPanel().getSelectedIndex(), 0);
+
+                draggedItemPos = new Vector2(hero.getPanel().getSelectedIndex(), 0).scl(PANEL_CELL_SIZE).add(PANEL_MARGIN_LEFT, PANEL_MARGIN_BOTTOM);
+                draggedItemShift = new Vector2(screenX, screenY).sub(draggedItemPos);
+
+                draggedItem = hero.getPanel().getSelectedItem();
+                hero.getPanel().destroyItemInSelectedIndex();
+
+                draggedItemFromInventory = false;
+            }
             return true;
         }
         return false;
+    }
+
+    public void updateDraggingItem(int screenX, int screenY) {
+        draggedItemPos.set(screenX, screenY).sub(draggedItemShift);
+    }
+
+    public void onMouseUp() {
+        if (isDraggingItem) {
+            isDraggingItem = false;
+
+            Inventory inventory = hero.getInventory();
+
+            Vector2 cell = getInventoryCell(draggedItemPos.x + draggedItemShift.x, draggedItemPos.y + draggedItemShift.y);
+            if (cell != null) {
+                inventory.selectItem((int) cell.x, (int) cell.y);
+                if (!inventory.isSelectedCellEmpty())
+                    inventory.selectItem((int) oldDraggingItemPos.x, (int) oldDraggingItemPos.y);
+
+                inventory.putInSelectedCell(draggedItem);
+            }
+            else {
+                cell = getPanelCell(draggedItemPos.x + draggedItemShift.x, draggedItemPos.y + draggedItemShift.y);
+                if (cell != null) {
+                    hero.getPanel().setSelectedIndex((int) cell.x);
+                    if (!hero.getPanel().isSelectedCellEmpty())
+                        hero.getPanel().setSelectedIndex((int) oldDraggingItemPos.x);
+
+                    hero.getPanel().putInSelectedCell(draggedItem);
+                }
+                else if (draggedItemFromInventory) {
+                    inventory.selectItem((int) oldDraggingItemPos.x, (int) oldDraggingItemPos.y);
+                    inventory.putInSelectedCell(draggedItem);
+                }
+                else { //from panel
+                    hero.getPanel().setSelectedIndex((int) oldDraggingItemPos.x);
+                    hero.getPanel().putInSelectedCell(draggedItem);
+                }
+            }
+
+            draggedItem = null;
+        }
     }
 
     public void onRMBClick(int screenX, int screenY) {
@@ -252,11 +375,8 @@ public class UiRenderer {
             hero.getInventory().consume();
     }
 
+
     public void toggleInventory() {
         this.isShowingInventory = !this.isShowingInventory;
-    }
-
-    public void toggleCrafting() {
-        this.isShowingCrafting = !this.isShowingCrafting;
     }
 }
