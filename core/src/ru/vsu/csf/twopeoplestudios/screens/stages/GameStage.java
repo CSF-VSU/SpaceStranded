@@ -191,7 +191,7 @@ public class GameStage extends Stage {
                     uiRenderer.onClick(screenX, Values.SCREEN_HEIGHT - screenY);
                 }
                 else
-                    hero.attack();
+                    hero.usePanelItem();
                 break;
             case Input.Buttons.RIGHT:
                 if (uiRenderer.isShowingInventory()) {

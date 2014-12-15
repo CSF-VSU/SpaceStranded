@@ -41,15 +41,9 @@ public class UiRenderer {
     private GameStage stage;
 
     private boolean isShowingInventory;
-    private boolean isShowingCrafting;
-
 
     public boolean isShowingInventory() {
         return isShowingInventory;
-    }
-
-    public boolean isShowingCrafting() {
-        return isShowingCrafting;
     }
 
     public UiRenderer(Hero hero) {
@@ -206,7 +200,6 @@ public class UiRenderer {
                     }
                 }
             }
-
             //endregion
         }
         //endregion

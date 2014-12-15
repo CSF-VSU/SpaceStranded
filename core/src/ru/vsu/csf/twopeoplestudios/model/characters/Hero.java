@@ -63,6 +63,10 @@ public class Hero extends Character {
     //endregion
 
     //region Getters/Setters
+    public HeroAttack getAttack() {
+        return attack;
+    }
+
     public ArrayList<Effect> getActiveEffects() {
         return activeEffects;
     }
@@ -164,6 +168,9 @@ public class Hero extends Character {
         inventory.add(new Collectible(0, 5));
         inventory.add(new Collectible(1, 5));
         inventory.add(new Collectible(2, 5));
+
+        //panel.add(new MeleeWeapon(200, this));
+        panel.add(new MeleeWeapon(250, this));
 
         knownHerbs = new ArrayList<KnownHerb>();
         activeEffects = new ArrayList<Effect>();
@@ -381,10 +388,13 @@ public class Hero extends Character {
         effect.onAttach(this);
     }
 
-    public void attack( ) {
+    public void usePanelItem() {
         if (attack.isAlive())
             return;
 
-        attack.init(HeroAttacks.attacks.get(MeleeAttackType.SLASH_ATTACK).get(facing));
+        if (panel.getSelectedItem() instanceof MeleeWeapon) {
+            MeleeWeapon weapon = (MeleeWeapon) panel.getSelectedItem();
+            weapon.attack();
+        }
     }
 }

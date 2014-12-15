@@ -16,4 +16,8 @@ public abstract class Character {
     protected int hp;
 
     protected Facing facing;
+
+    public Facing getFacing() {
+        return facing;
+    }
 }

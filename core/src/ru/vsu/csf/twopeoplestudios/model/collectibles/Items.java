@@ -12,6 +12,8 @@ public class Items {
 
     private static final int HERB_ID = 0;
     private static final int ITEM_ID = 100;
+    private static final int RANGED_WEAPON_ID = 200;
+    private static final int MELEE_WEAPON_ID = 250;
 
 
     private static Items instance;
@@ -32,6 +34,9 @@ public class Items {
             put(105, new Item(105, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/5.png"))), "Scrap", "This is an item", true));
             put(106, new Item(106, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/6.png"))), "Forcer", "This is an item", true));
             put(107, new Item(107, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/7.png"))), "Gear", "This is an item", true));
+
+            put(200, new Item(200, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/8.png"))), "Blaster", "A blaster. Can shoot your brains out.", false));
+            put(250, new Item(250, new TextureRegion(new Texture(Gdx.files.internal("gfx/items/9.png"))), "Knife", "A knife. Sharp as fuck", false));
         }};
     }
 
@@ -53,5 +58,9 @@ public class Items {
 
     public boolean isHerb(int id) {
         return (id >= HERB_ID && id <= HERB_ID + GROUP_SIZE);
+    }
+
+    public boolean isMeleeWeapon(int id) {
+        return  (id >= MELEE_WEAPON_ID && id <= MELEE_WEAPON_ID + GROUP_SIZE/2);
     }
 }
