@@ -102,10 +102,13 @@ public class Map {
             position.set(pos);
             type = BodyType.KinematicBody;
         }});
-        projectiles.add(new FlyingProjectile() {{
+
+        FlyingProjectile newProjectile = new FlyingProjectile() {{
             id = proj_id;
             body = b;
-        }});
+        }};
+        projectiles.add(newProjectile);
+        b.setUserData(newProjectile);
 
         b.setBullet(true);
         b.setTransform(pos, (float) rotation);
