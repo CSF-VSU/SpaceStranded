@@ -288,20 +288,29 @@ public class Hero extends Character {
     //region Handling input
     private void handleInputFlags() {
         //todo: velocity - вектор скорости
+        boolean locked = false;
         if (leftPressed) {
-            if (facing == Facing.DOWN)
+            if (facing == Facing.DOWN) {
+                locked = true;
                 facing = Facing.DOWN_LEFT;
-            else if (facing == Facing.UP)
+            }
+            else if (facing == Facing.UP) {
+                locked = true;
                 facing = Facing.UP_LEFT;
+            }
             else
                 facing = Facing.LEFT;
             velocity.set(-1, velocity.y);
         }
         if (rightPressed) {
-            if (facing == Facing.DOWN)
+            if (facing == Facing.DOWN) {
+                locked = true;
                 facing = Facing.DOWN_RIGHT;
-            else if (facing == Facing.UP)
+            }
+            else if (facing == Facing.UP) {
+                locked = true;
                 facing = Facing.UP_RIGHT;
+            }
             else
                 facing = Facing.RIGHT;
             velocity.set(1, velocity.y);
@@ -311,7 +320,7 @@ public class Hero extends Character {
                 facing = Facing.UP_LEFT;
             else if (facing == Facing.RIGHT)
                 facing = Facing.UP_RIGHT;
-            else
+            else if(!locked)
                 facing = Facing.UP;
             velocity.set(velocity.x, 1);
         }
@@ -320,7 +329,7 @@ public class Hero extends Character {
             facing = Facing.DOWN_LEFT;
             else if (facing == Facing.RIGHT)
                 facing = Facing.DOWN_RIGHT;
-            else
+            else if (!locked)
                 facing = Facing.DOWN;
             velocity.set(velocity.x, -1);
         }
