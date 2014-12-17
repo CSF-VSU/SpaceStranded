@@ -26,6 +26,7 @@ import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.WorldContactListener;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
+import ru.vsu.csf.twopeoplestudios.model.timing.WorldClocks;
 import ru.vsu.csf.twopeoplestudios.model.weapons.FlyingProjectile;
 import ru.vsu.csf.twopeoplestudios.model.weapons.HeroAttacks;
 import ru.vsu.csf.twopeoplestudios.model.weapons.Weapons;
@@ -39,9 +40,6 @@ public class MapRenderer {
     public static final int CELL_SIZE = 64;
 
     public Map map;
-
-    Items items;
-    Herbs herbs;
 
     private Box2DDebugRenderer debugRenderer;
     public OrthographicCamera camera;
@@ -114,9 +112,7 @@ public class MapRenderer {
 
         HeroAttacks.init(world);
 
-        herbs = Herbs.getInstance();
         map = new Map(world);
-        items = Items.getInstance();
 
         if (Settings.SHOW_GRAPHICS) {
             camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

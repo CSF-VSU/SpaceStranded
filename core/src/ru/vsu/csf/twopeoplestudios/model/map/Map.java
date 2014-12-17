@@ -97,4 +97,8 @@ public class Map {
         }});
         polygonShape.dispose();
     }
+
+    public void unleashHellAtNight() {
+        Gdx.app.log("Timing", "Spawning mobs, scary as fuck.");
+    }
 }
