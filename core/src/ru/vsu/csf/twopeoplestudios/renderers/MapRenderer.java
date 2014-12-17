@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -28,10 +29,13 @@ import ru.vsu.csf.twopeoplestudios.model.weapons.FlyingProjectile;
 import ru.vsu.csf.twopeoplestudios.model.weapons.HeroAttacks;
 import ru.vsu.csf.twopeoplestudios.model.weapons.Weapons;
 import ru.vsu.csf.twopeoplestudios.model.world.MapTile;
+import ru.vsu.csf.twopeoplestudios.model.world.TerrainType;
 
-public class MapRenderer {
+import java.util.Random;
 
-    public static final int CELL_SIZE = 64;
+public class MapRenderer{
+
+    private static final int CELL_SIZE = 64;
 
     public Map map;
 
@@ -44,10 +48,13 @@ public class MapRenderer {
 
     //region backgroundDrawingVars
     private TiledMap tiledMap;
-    private MapLayers layers;
-    private TiledMapRenderer tiledMapRenderer;
+
+    private ExtendedOrthogonalTiledMapRenderer tiledMapRenderer;
     private MapTile[][] mapScheme;
     //endregion
+
+    Random random = new Random();
+
 
     TextureRegion heroTexture;
     TextureRegion monsterTexture;
@@ -62,13 +69,15 @@ public class MapRenderer {
         TextureRegion water = new TextureRegion(new Texture(new FileHandle("gfx/tiles/water.png")));
         TextureRegion land = new TextureRegion(new Texture(new FileHandle("gfx/tiles/grass.png")));
         TextureRegion sand = new TextureRegion(new Texture(new FileHandle("gfx/tiles/sand.png")));
+        TextureRegion tree = new TextureRegion(new Texture(new FileHandle("gfx/tiles/tree-icon.png")));
 
         TiledMapTile waterTile = new StaticTiledMapTile(water);
         TiledMapTile landTile = new StaticTiledMapTile(land);
         TiledMapTile sandTile = new StaticTiledMapTile(sand);
+        TiledMapTile treeTile = new StaticTiledMapTile(tree);
+        MapLayers layers = tiledMap.getLayers();
 
         TiledMapTileLayer layer = new TiledMapTileLayer(128, 64, 64, 64);
-        MapLayers layers = tiledMap.getLayers();
 
         for (int i = 0; i < mapWidth; i++)
             for (int j = 0; j < mapHeight; j++)
@@ -88,7 +97,21 @@ public class MapRenderer {
                 layer.setCell(i, j, cell);
             }
         layers.add(layer);
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+        TiledMapTileLayer treeLayer = new TiledMapTileLayer(128, 64, 64, 64);
+        for (int i = 0; i < mapWidth; i++)
+            for (int j = 0; j < mapHeight; j++)
+            {
+
+                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+
+                if (mapScheme[i][j].type == TerrainType.GROUND && random.nextInt(4) == 2)
+                    cell.setTile(treeTile);
+                treeLayer.setCell(i, j, cell);
+            }
+        layers.add(treeLayer);
+
+
         //endregion
 
         debugRenderer = new Box2DDebugRenderer(true, false, false, false, true, true);
@@ -106,15 +129,19 @@ public class MapRenderer {
         camera.position.set(map.hero.getHeroPosition().x, map.hero.getHeroPosition().y, 0);
 
         heroTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/hero.png")));
+        tiledMapRenderer = new ExtendedOrthogonalTiledMapRenderer(tiledMap, map, camera, heroTexture, items);
         monsterTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/monster.png")));
     }
 
     Vector3 lerpTarget = new Vector3();
     public void render(Batch batch, float delta) {
+        map.update(delta);
+
+
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
         tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
+        tiledMapRenderer.render(batch);
 
         map.update(delta);
 
@@ -144,6 +171,7 @@ public class MapRenderer {
                  map.hero.getHeroPosition().y - CELL_SIZE/2f);
 
         batch.end();
+
 
         camera.position.lerp(lerpTarget.set(
                 map.hero.getHeroPosition().x,
