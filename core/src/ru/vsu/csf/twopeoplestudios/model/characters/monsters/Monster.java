@@ -13,7 +13,6 @@ import ru.vsu.csf.twopeoplestudios.renderers.MapRenderer;
 
 public class Monster extends Character {
 
-    //todo: 5. Monster consts
     private static final float RESTITUTION = 0.8f;
     private static final float FRICTION = 0.5f;
     private static final float DENSITY = 0.8f;
@@ -132,7 +131,7 @@ public class Monster extends Character {
                 break;
         }
         //moveIntoChosenDirection(Facing.DOWN_LEFT);
-        moveToPoint(new Vector2(64 * MapRenderer.CELL_SIZE, 32 * MapRenderer.CELL_SIZE));
+        //moveToPoint(new Vector2(64 * MapRenderer.CELL_SIZE, 32 * MapRenderer.CELL_SIZE));
     }
 
     private void updateSensors() {

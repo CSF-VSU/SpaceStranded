@@ -33,9 +33,9 @@ import ru.vsu.csf.twopeoplestudios.model.world.TerrainType;
 
 import java.util.Random;
 
-public class MapRenderer{
+public class MapRenderer {
 
-    private static final int CELL_SIZE = 64;
+    public static final int CELL_SIZE = 64;
 
     public Map map;
 
@@ -46,24 +46,15 @@ public class MapRenderer{
     public OrthographicCamera camera;
     private World world;
 
-    //region backgroundDrawingVars
-    private TiledMap tiledMap;
-
     private ExtendedOrthogonalTiledMapRenderer tiledMapRenderer;
-    private MapTile[][] mapScheme;
-    //endregion
 
     Random random = new Random();
-
-
-    TextureRegion heroTexture;
-    TextureRegion monsterTexture;
 
     public MapRenderer() {
         //region backgroundDrawing
 
-        mapScheme = ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().map;
-        tiledMap = new TiledMap();
+        MapTile[][] mapScheme = ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().map;
+        TiledMap tiledMap = new TiledMap();
         int mapWidth = mapScheme.length;
         int mapHeight = mapScheme[0].length;
         TextureRegion water = new TextureRegion(new Texture(new FileHandle("gfx/tiles/water.png")));
@@ -128,56 +119,26 @@ public class MapRenderer{
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(map.hero.getHeroPosition().x, map.hero.getHeroPosition().y, 0);
 
-        heroTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/hero.png")));
-        tiledMapRenderer = new ExtendedOrthogonalTiledMapRenderer(tiledMap, map, camera, heroTexture, items);
-        monsterTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/monster.png")));
+        tiledMapRenderer = new ExtendedOrthogonalTiledMapRenderer(tiledMap, map);
     }
 
     Vector3 lerpTarget = new Vector3();
     public void render(Batch batch, float delta) {
         map.update(delta);
 
-
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
-
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render(batch);
-
-        map.update(delta);
-
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-
-        for (Herb h : map.herbs) {
-            batch.draw(items.getItemTexture(h.getId()),
-                    h.getPosition().x,
-                    h.getPosition().y);
-        }
-
-        for (Monster m : map.monsters) {
-            batch.draw(monsterTexture,
-                    m.getPosition().x - CELL_SIZE,
-                    m.getPosition().y - CELL_SIZE/2f);
-        }
-
-        for (FlyingProjectile f : map.projectiles) {
-            batch.draw(Weapons.getInstance().getTextureRegion(f.id),
-                    f.body.getPosition().x,
-                    f.body.getPosition().y);
-        }
-
-        batch.draw(heroTexture,
-                (map.hero.getHeroPosition().x - CELL_SIZE),
-                 map.hero.getHeroPosition().y - CELL_SIZE/2f);
-
-        batch.end();
-
 
         camera.position.lerp(lerpTarget.set(
                 map.hero.getHeroPosition().x,
                 map.hero.getHeroPosition().y,
                 0), 2f * delta);
         camera.update();
+
+        batch.setProjectionMatrix(camera.combined);
+        tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render(batch);
+
+        map.update(delta);
 
         debugRenderer.render(world, camera.combined);
     }
