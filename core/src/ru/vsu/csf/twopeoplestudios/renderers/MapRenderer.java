@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import ru.vsu.csf.twopeoplestudios.Settings;
 import ru.vsu.csf.twopeoplestudios.Values;
 import ru.vsu.csf.twopeoplestudios.model.characters.monsters.Monster;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Items;
@@ -96,8 +97,9 @@ public class MapRenderer {
 
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-                if (mapScheme[i][j].type == TerrainType.GROUND && random.nextInt(4) == 2)
+                if (Settings.SPAWN_BADASS_TREES && mapScheme[i][j].type == TerrainType.GROUND && random.nextInt(4) == 2)
                     cell.setTile(treeTile);
+
                 treeLayer.setCell(i, j, cell);
             }
         layers.add(treeLayer);
@@ -116,8 +118,14 @@ public class MapRenderer {
         map = new Map(world);
         items = Items.getInstance();
 
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(map.hero.getHeroPosition().x, map.hero.getHeroPosition().y, 0);
+        if (Settings.SHOW_GRAPHICS) {
+            camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            camera.position.set(map.hero.getHeroPosition().x * CELL_SIZE, map.hero.getHeroPosition().y * CELL_SIZE, 0);
+        }
+        else {
+            camera = new OrthographicCamera(20, 16);
+            camera.position.set(map.hero.getHeroPosition().x, map.hero.getHeroPosition().y, 0);
+        }
 
         tiledMapRenderer = new ExtendedOrthogonalTiledMapRenderer(tiledMap, map);
     }
@@ -125,22 +133,29 @@ public class MapRenderer {
     Vector3 lerpTarget = new Vector3();
     public void render(Batch batch, float delta) {
         map.update(delta);
-
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
-        camera.position.lerp(lerpTarget.set(
-                map.hero.getHeroPosition().x,
-                map.hero.getHeroPosition().y,
-                0), 2f * delta);
+        if (Settings.SHOW_GRAPHICS) {
+            camera.position.lerp(lerpTarget.set(
+                    map.hero.getHeroPosition().x * CELL_SIZE,
+                    map.hero.getHeroPosition().y * CELL_SIZE,
+                    0), 2f * delta);
+        }
+        else {
+            camera.position.lerp(lerpTarget.set(
+                    map.hero.getHeroPosition().x,
+                    map.hero.getHeroPosition().y,
+                    0), 2f * delta);
+        }
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
         tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render(batch);
 
-        map.update(delta);
-
-        debugRenderer.render(world, camera.combined);
+        if (Settings.SHOW_GRAPHICS)
+            tiledMapRenderer.render(batch);
+        else
+            debugRenderer.render(world, camera.combined);
     }
 
     public void updateMousePos(int screenX, int screenY) {

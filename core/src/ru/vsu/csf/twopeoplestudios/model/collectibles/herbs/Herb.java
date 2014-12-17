@@ -24,7 +24,8 @@ public class Herb extends Collectible {
         body = world.createBody(bodyDef);
 
         final PolygonShape herbShape = new PolygonShape() {{
-            setAsBox(MapRenderer.CELL_SIZE/2f, MapRenderer.CELL_SIZE/2f);
+            //setAsBox(MapRenderer.CELL_SIZE/2f, MapRenderer.CELL_SIZE/2f);
+            setAsBox(0.5f, 0.5f);
         }};
 
         FixtureDef fixtureDef = new FixtureDef() {{

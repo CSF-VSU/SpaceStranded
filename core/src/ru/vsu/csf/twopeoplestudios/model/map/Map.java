@@ -1,7 +1,9 @@
 package ru.vsu.csf.twopeoplestudios.model.map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import ru.vsu.csf.twopeoplestudios.Settings;
 import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
 import ru.vsu.csf.twopeoplestudios.model.characters.monsters.Monster;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herb;
@@ -29,45 +31,16 @@ public class Map {
         this.world = world;
         hero = new Hero(world, this);
         herbs = new LinkedList<Herb>() {{
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(1, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
-            add(new Herb(2, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE), world));
+            if (Settings.SPAWN_HERBS)
+                for (int i = 0; i < 20; i++)
+                    add(new Herb(0, 1, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition()/*.scl(MapRenderer.CELL_SIZE)*/, world));
         }};
         monsters = new LinkedList<Monster>() {{
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
-            add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE)));
+            if (Settings.SPAWN_MONSTERS)
+                for (int i = 0; i < 20; i++)
+                    add(new Monster(world, ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().getRandomPosition()));//.scl(MapRenderer.CELL_SIZE)));
         }};
+
         toDestroy = new LinkedList<Body>();
         projectiles = new LinkedList<FlyingProjectile>();
     }
@@ -118,6 +91,7 @@ public class Map {
         }};
         b.createFixture(new FixtureDef() {{
             shape = polygonShape;
+            isSensor = true;
             filter.categoryBits = category;
             filter.maskBits = mask;
         }});

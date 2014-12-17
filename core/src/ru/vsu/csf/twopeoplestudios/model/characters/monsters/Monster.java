@@ -16,11 +16,12 @@ public class Monster extends Character {
     private static final float RESTITUTION = 0.8f;
     private static final float FRICTION = 0.5f;
     private static final float DENSITY = 0.8f;
-    private static final float RUN_SPEED = 45000;
 
-    private static final float VISIBLE_BREADTH = 100;
-    private static final float VISIBLE_DISTANCE = 240;
-    private static final float SENSOR_SHIFT = VISIBLE_DISTANCE - 50;
+    private static final float RUN_SPEED = 1;
+
+    private static final float VISIBLE_BREADTH = 2;
+    private static final float VISIBLE_DISTANCE = 4;
+    private static final float SENSOR_SHIFT = VISIBLE_DISTANCE - 0.5f;
 
     private BehaviourState state;
 
@@ -47,7 +48,8 @@ public class Monster extends Character {
         }};
 
         final PolygonShape polygonShape = new PolygonShape() {{
-            setAsBox(MapRenderer.CELL_SIZE/2f, MapRenderer.CELL_SIZE/2f);
+            //setAsBox(MapRenderer.CELL_SIZE/2f, MapRenderer.CELL_SIZE/2f);
+            setAsBox(0.5f, 0.5f);
         }};
 
         FixtureDef fixtureDef = new FixtureDef() {{

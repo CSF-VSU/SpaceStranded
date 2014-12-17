@@ -1,10 +1,12 @@
 package ru.vsu.csf.twopeoplestudios.model.characters;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import ru.vsu.csf.twopeoplestudios.Values;
 import ru.vsu.csf.twopeoplestudios.model.characters.effects.Effect;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
@@ -28,8 +30,12 @@ public class Hero extends Character {
     private static final float FRICTION = 0.1f;
     private static final float DENSITY = 0.0f;
 
-    private static final float VELOCITY = 15000; //большим цифрам мы обязаны камере и ее настройкам. Не удивляйся
-    private static final float RUN_SPEED = 45000;
+    private static final float HERO_SIZE = 0.5f;
+
+    //private static final float VELOCITY = 15000; //большим цифрам мы обязаны камере и ее настройкам. Не удивляйся
+    //private static final float RUN_SPEED = 45000;\
+    private static final float VELOCITY = 1;
+    private static final float RUN_SPEED = 4;
 
     //region Declarations
     Vector2 velocity;
@@ -132,7 +138,7 @@ public class Hero extends Character {
 
     //region Creating
     public Hero(com.badlogic.gdx.physics.box2d.World world, Map map) {
-        charPosition = World.getInstance().getRandomPosition().scl(MapRenderer.CELL_SIZE);
+        charPosition = World.getInstance().getRandomPosition();
         velocity = new Vector2(0, 0);
         leftPressed = false;
         rightPressed = false;
@@ -187,7 +193,8 @@ public class Hero extends Character {
         body = world.createBody(bodyDef);
 
         final PolygonShape polygonShape = new PolygonShape() {{
-            setAsBox(MapRenderer.CELL_SIZE / 2f, MapRenderer.CELL_SIZE / 2f);
+            //setAsBox(MapRenderer.CELL_SIZE / 2f, MapRenderer.CELL_SIZE / 2f);
+            setAsBox(HERO_SIZE, HERO_SIZE);
         }};
 
         FixtureDef fixtureDef = new FixtureDef() {{

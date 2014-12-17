@@ -20,7 +20,7 @@ public class Weapons {
         projectiles = new HashMap<Integer, ProjectileInfo>() {{
             put(200, new ProjectileInfo() {{
                 textureRegion = new TextureRegion(new Texture(Gdx.files.internal("gfx/projectiles/blasterProjectile.png")));
-                shape = new Vector2(7, 7);
+                shape = new Vector2(0.1f, 0.1f);
             }});
         }};
     }

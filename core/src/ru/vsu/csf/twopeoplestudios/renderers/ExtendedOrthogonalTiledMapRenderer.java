@@ -51,25 +51,25 @@ public class ExtendedOrthogonalTiledMapRenderer extends OrthogonalTiledMapRender
 
                         for (Herb h : physMap.herbs) {
                             batch.draw(Items.getInstance().getItemTexture(h.getId()),
-                                    h.getPosition().x,
-                                    h.getPosition().y);
+                                    h.getPosition().x * MapRenderer.CELL_SIZE,
+                                    h.getPosition().y * MapRenderer.CELL_SIZE);
                         }
 
                         for (Monster m : physMap.monsters) {
                             batch.draw(monsterTexture,
-                                    m.getPosition().x - MapRenderer.CELL_SIZE,
-                                    m.getPosition().y - MapRenderer.CELL_SIZE/2f);
+                                    m.getPosition().x * MapRenderer.CELL_SIZE - MapRenderer.CELL_SIZE,
+                                    m.getPosition().y * MapRenderer.CELL_SIZE - MapRenderer.CELL_SIZE/2f);
                         }
 
                         for (FlyingProjectile f : physMap.projectiles) {
                             batch.draw(Weapons.getInstance().getTextureRegion(f.id),
-                                    f.body.getPosition().x,
-                                    f.body.getPosition().y);
+                                    f.body.getPosition().x * MapRenderer.CELL_SIZE,
+                                    f.body.getPosition().y * MapRenderer.CELL_SIZE);
                         }
 
                         batch.draw(heroTexture,
-                                (physMap.hero.getHeroPosition().x - MapRenderer.CELL_SIZE),
-                                physMap.hero.getHeroPosition().y - MapRenderer.CELL_SIZE/2f);
+                                (physMap.hero.getHeroPosition().x * MapRenderer.CELL_SIZE - MapRenderer.CELL_SIZE),
+                                physMap.hero.getHeroPosition().y * MapRenderer.CELL_SIZE - MapRenderer.CELL_SIZE/2f);
 
                         batch.end();
                     }
