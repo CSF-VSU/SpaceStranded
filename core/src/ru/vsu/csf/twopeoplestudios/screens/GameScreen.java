@@ -19,14 +19,6 @@ public class GameScreen extends AbstractScreen {
     private MapRenderer renderer;
     private UiRenderer uiRenderer;
 
-
-    //region backgroundDrawingVars
-    private TiledMap tiledMap;
-    private MapLayers layers;
-    private TiledMapRenderer tiledMapRenderer;
-    private MapTile[][] mapScheme;
-    //endregion
-
     public GameScreen(Game game) {
         super(game);
     }
@@ -35,50 +27,9 @@ public class GameScreen extends AbstractScreen {
     public void show() {
         super.show();
 
-        //region backgroundDrawing
-
-        mapScheme = ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().map;
-        tiledMap = new TiledMap();
-        int mapWidth = mapScheme.length;
-        int mapHeight = mapScheme[0].length;
-        TextureRegion water = new TextureRegion(new Texture(new FileHandle("gfx/tiles/water.png")));
-        TextureRegion land = new TextureRegion(new Texture(new FileHandle("gfx/tiles/grass.png")));
-        TextureRegion sand = new TextureRegion(new Texture(new FileHandle("gfx/tiles/sand.png")));
-        TextureRegion tree = new TextureRegion(new Texture(new FileHandle("gfx/tiles/tree-icon.png")));
 
 
-        TiledMapTile waterTile = new StaticTiledMapTile(water);
-        TiledMapTile landTile = new StaticTiledMapTile(land);
-        TiledMapTile sandTile = new StaticTiledMapTile(sand);
-        TiledMapTile treeTile = new StaticTiledMapTile(tree);
-
-        TiledMapTileLayer layer = new TiledMapTileLayer(128, 64, 64, 64);
-        MapLayers layers = tiledMap.getLayers();
-
-        for (int i = 0; i < mapWidth; i++)
-            for (int j = 0; j < mapHeight; j++)
-            {
-                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                switch (mapScheme[i][j].type) {
-                    case GROUND:
-                        cell.setTile(landTile);
-                        break;
-                    case WATER:
-                        cell.setTile(waterTile);
-                        break;
-                    case SAND:
-                        cell.setTile(sandTile);
-                        break;
-                }
-                layer.setCell(i, j, cell);
-            }
-        layers.add(layer);
-
-       // tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-        //endregion
-
-
-        renderer = new MapRenderer(tiledMap);
+        renderer = new MapRenderer();
         renderer.map.hero.initGameScreen(this);
 
         uiRenderer = new UiRenderer(renderer.map.hero);

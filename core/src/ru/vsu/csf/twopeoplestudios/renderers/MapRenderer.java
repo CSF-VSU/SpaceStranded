@@ -24,8 +24,11 @@ import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.WorldContactListener;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
 import ru.vsu.csf.twopeoplestudios.model.world.MapTile;
+import ru.vsu.csf.twopeoplestudios.model.world.TerrainType;
 
-public class MapRenderer  extends OrthogonalTiledMapRenderer{
+import java.util.Random;
+
+public class MapRenderer{
 
     private static final int CELL_SIZE = 64;
 
@@ -40,22 +43,21 @@ public class MapRenderer  extends OrthogonalTiledMapRenderer{
 
     //region backgroundDrawingVars
     private TiledMap tiledMap;
-  //  private MapLayers layers;
-   // private TiledMapRenderer tiledMapRenderer;
-   // private MapTile[][] mapScheme;
+
+    private ExtendedOrthogonalTiledMapRenderer tiledMapRenderer;
+    private MapTile[][] mapScheme;
     //endregion
 
-
+    Random random = new Random();
 
 
     TextureRegion heroTexture;
 
-    public MapRenderer(TiledMap tiledMap) {
-        super(tiledMap);
-        this.tiledMap = tiledMap;
+    public MapRenderer() {
+
         //region backgroundDrawing
 
-       /* mapScheme = ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().map;
+        mapScheme = ru.vsu.csf.twopeoplestudios.model.world.World.getInstance().map;
         tiledMap = new TiledMap();
         int mapWidth = mapScheme.length;
         int mapHeight = mapScheme[0].length;
@@ -69,9 +71,10 @@ public class MapRenderer  extends OrthogonalTiledMapRenderer{
         TiledMapTile landTile = new StaticTiledMapTile(land);
         TiledMapTile sandTile = new StaticTiledMapTile(sand);
         TiledMapTile treeTile = new StaticTiledMapTile(tree);
+        MapLayers layers = tiledMap.getLayers();
 
         TiledMapTileLayer layer = new TiledMapTileLayer(128, 64, 64, 64);
-        MapLayers layers = tiledMap.getLayers();
+
 
         for (int i = 0; i < mapWidth; i++)
             for (int j = 0; j < mapHeight; j++)
@@ -92,8 +95,22 @@ public class MapRenderer  extends OrthogonalTiledMapRenderer{
             }
         layers.add(layer);
 
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap); */
+        TiledMapTileLayer treeLayer = new TiledMapTileLayer(128, 64, 64, 64);
+        for (int i = 0; i < mapWidth; i++)
+            for (int j = 0; j < mapHeight; j++)
+            {
+
+                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+
+                if (mapScheme[i][j].type == TerrainType.GROUND && random.nextInt(4) == 2)
+                    cell.setTile(treeTile);
+                treeLayer.setCell(i, j, cell);
+            }
+        layers.add(treeLayer);
+
+
         //endregion
+
 
         debugRenderer = new Box2DDebugRenderer();
 
@@ -111,49 +128,27 @@ public class MapRenderer  extends OrthogonalTiledMapRenderer{
                             map.hero.getHeroPosition().y * CELL_SIZE, 0);
         //camera.position.set(0,0,0);
         heroTexture = new TextureRegion(new Texture(Gdx.files.internal("gfx/characters/hero.png")));
+        tiledMapRenderer = new ExtendedOrthogonalTiledMapRenderer(tiledMap, map, camera, heroTexture, items);
     }
 
     Vector3 lerpTarget = new Vector3();
     public void render(Batch batch, float delta) {
-        setView(camera);
-        beginRender();
-        for(MapLayer layer : tiledMap.getLayers()) {
-            if (layer.isVisible())
-                if (layer instanceof TiledMapTileLayer) {
-                    renderTileLayer((TiledMapTileLayer)layer);
-            }
-        }
-        endRender();
+        map.update(delta);
 
-        //region RenderObjects
+
+        tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render(batch);
+
         debugRenderer.render(world, camera.combined);
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
         batch.setProjectionMatrix(camera.combined);
-        batch.begin();
 
-        map.update(delta);
-
-        for (Herb h : map.herbs) {
-            batch.draw(items.getItemTexture(h.getId()),
-                    h.getPosition().x * CELL_SIZE,
-                    h.getPosition().y * CELL_SIZE,
-                    1.5f * CELL_SIZE,
-                    1.5f * CELL_SIZE);
-        }
-
-        batch.draw(heroTexture,
-                (map.hero.getHeroPosition().x - 0.5f) * CELL_SIZE,
-                (map.hero.getHeroPosition().y - 0.5f) * CELL_SIZE,
-                1.7f * CELL_SIZE,
-                (18 * 1.7f / 11f) * CELL_SIZE);
-        batch.end();
 
         camera.position.lerp(lerpTarget.set(
                 map.hero.getHeroPosition().x * CELL_SIZE,
                 map.hero.getHeroPosition().y * CELL_SIZE,
                 0), 2f * delta);
         camera.update();
-        //endregion
     }
 }
