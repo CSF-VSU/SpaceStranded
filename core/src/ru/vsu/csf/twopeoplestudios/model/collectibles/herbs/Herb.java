@@ -19,13 +19,13 @@ public class Herb extends Collectible {
 
         BodyDef bodyDef = new BodyDef() {{
             type = BodyType.KinematicBody;
-            position.set(getPosition().x + MapRenderer.CELL_SIZE/2f, getPosition().y + MapRenderer.CELL_SIZE/2f);
+            position.set(getPosition().x, getPosition().y);
         }};
         body = world.createBody(bodyDef);
 
         final PolygonShape herbShape = new PolygonShape() {{
             //setAsBox(MapRenderer.CELL_SIZE/2f, MapRenderer.CELL_SIZE/2f);
-            setAsBox(0.5f, 0.5f);
+            setAsBox(0.03f, 0.03f);
         }};
 
         FixtureDef fixtureDef = new FixtureDef() {{

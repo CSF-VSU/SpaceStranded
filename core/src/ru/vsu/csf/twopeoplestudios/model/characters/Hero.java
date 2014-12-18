@@ -34,8 +34,8 @@ public class Hero extends Character {
 
     //private static final float VELOCITY = 15000; //большим цифрам мы обязаны камере и ее настройкам. Не удивляйся
     //private static final float RUN_SPEED = 45000;\
-    private static final float VELOCITY = 1;
-    private static final float RUN_SPEED = 4;
+    private static final float VELOCITY = 10;
+    private static final float RUN_SPEED = 40;
 
     //region Declarations
     Vector2 velocity;
@@ -138,7 +138,8 @@ public class Hero extends Character {
 
     //region Creating
     public Hero(com.badlogic.gdx.physics.box2d.World world, Map map) {
-        charPosition = World.getInstance().getRandomPosition();
+        //charPosition = World.getInstance().getRandomPosition();
+        charPosition = new Vector2(5, 5);
         velocity = new Vector2(0, 0);
         leftPressed = false;
         rightPressed = false;

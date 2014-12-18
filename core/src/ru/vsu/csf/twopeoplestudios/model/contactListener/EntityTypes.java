@@ -12,7 +12,7 @@ public class EntityTypes {
     //boolean столкновениеМожетБыть = (Category_1 & Mask_2) & (Category_2 & Mask_1)
     public static final short HERO_MASK         = HERB | ENEMY | ENEMY_SIGHT;
     public static final short HERB_MASK         = HERO;
-    public static final short ENEMY_MASK        = HERO | HERO_ATK;
+    public static final short ENEMY_MASK        = HERO | HERO_ATK | ENEMY;
     public static final short HERO_ATK_MASK     = ENEMY;
     public static final short ENEMY_SIGHT_MASK  = HERO;
 }
