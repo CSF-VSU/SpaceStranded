@@ -22,9 +22,8 @@ public class Monster extends Character {
     private static final float VISIBLE_BREADTH = 2;
     private static final float VISIBLE_DISTANCE = 4;
     private static final float SENSOR_SHIFT = VISIBLE_DISTANCE - 0.5f;
-    private static final float TG_PI_8 = 0.414213f;
-    private static final float TG_3_PI_8 = 2.414213f;
-    private static final float RAD_TO_DEG = (float) (180f/Math.PI);
+    private static final float TG_PI_8 = (float) Math.tan(Math.PI / 8);
+    private static final float TG_3_PI_8 = (float) Math.tan(3 * Math.PI / 8);
 
     private BehaviourState state;
 
@@ -257,78 +256,38 @@ public class Monster extends Character {
         //body.setLinearVelocity(body.getLinearVelocity().nor().scl(RUN_SPEED));
 
         body.setLinearVelocity(delta.x, delta.y);
-
-
-
-        //body.applyAngularImpulse(RUN_SPEED, true);
-
-
-        /*Vector2 vel = body.getLinearVelocity();
-        if (Math.abs(vel.x) > RUN_SPEED) {
-            vel.x = Math.signum(vel.x) * RUN_SPEED;
-            body.setLinearVelocity(vel);
-        }
-        if (Math.abs(vel.y) > RUN_SPEED) {
-            vel.y = Math.signum(vel.y) * RUN_SPEED;
-            body.setLinearVelocity(vel);
-        }*/
-
-        //float tg = (float) Math.atan2(delta.y, delta.x);
-        //float ctg = 1f / tg;
-        //float sin = delta.x / delta.len();
-        //float cos = delta.y / delta.len();
-
-//        Gdx.app.log("", "sin: " + sin);
-//        Gdx.app.log("", "cos: " + cos);
-
-        //body.setTransform(body.getPosition().x, body.getPosition().y, (float) Math.atan2(delta.y, delta.x));
-
-        //if (delta.x > 0) {
-        //body.applyLinearImpulse(new Vector2(RUN_SPEED * sin, RUN_SPEED * cos), body.getPosition(), true);
-
-
-
-            //this.body.applyLinearImpulse(RUN_SPEED, tg * RUN_SPEED, /*body, curY,*/ true);
-            /*if (delta.y > 0) {
-                if (tg < TG_PI_8)
+        if (delta.x > 0)
+            if (delta.y > 0) {
+                if (delta.y / delta.x < TG_PI_8)
                     this.facing = Facing.RIGHT;
-                else if (tg < TG_3_PI_8)
+                else if (delta.y / delta.x < TG_3_PI_8)
                     this.facing = Facing.UP_RIGHT;
                 else
                     this.facing = Facing.UP;
             }
             else {
-                if (tg > -TG_PI_8)
+                if (delta.y / delta.x > -TG_PI_8)
                     this.facing = Facing.RIGHT;
-                else if (tg > -TG_3_PI_8)
+                else if (delta.y / delta.x > -TG_3_PI_8)
                     this.facing = Facing.DOWN_RIGHT;
                 else
                     this.facing = Facing.DOWN;
             }
-        }
-        else
-            this.body.applyLinearImpulse(-RUN_SPEED, -tg * RUN_SPEED, curX, curY, true);
-        if (deltaY > 0) {
-            if (tg > -TG_PI_8)
+        else if (delta.y > 0) {
+            if (delta.y / delta.x > -TG_PI_8)
                 this.facing = Facing.LEFT;
-            else if (tg > -TG_3_PI_8)
+            else if (delta.y / delta.x > -TG_3_PI_8)
                 this.facing = Facing.UP_LEFT;
             else
                 this.facing = Facing.UP;
         }
         else {
-            if (tg < TG_PI_8)
+            if (delta.y / delta.x < TG_PI_8)
                 this.facing = Facing.LEFT;
-            else if (tg < TG_3_PI_8)
+            else if (delta.y / delta.x < TG_3_PI_8)
                 this.facing = Facing.DOWN_LEFT;
             else
                 this.facing = Facing.DOWN;
-        }*/
-
-        //Vector2 vel = this.body.getLinearVelocity();
-       /* if (delta.x < 2)
-            this.body.setLinearVelocity(vel.x * 0.05f, vel.y);
-        if (delta.y < 2)
-            this.body.setLinearVelocity(vel.x, vel.y * 0.05f);*/
+        }
     }
 }
