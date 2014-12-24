@@ -163,7 +163,7 @@ public class Hero extends Character {
 
         herbUnderFeet = null;
         inventory = new Inventory(this);
-        panel = new Panel();
+        panel = new Panel(this);
 
         inventory.add(new Collectible(100, 5));
         inventory.add(new Collectible(101, 5));

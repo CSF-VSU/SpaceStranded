@@ -364,8 +364,21 @@ public class UiRenderer {
     }
 
     public void onRMBClick(int screenX, int screenY) {
-        if (onClick(screenX, screenY))
-            hero.getInventory().consume();
+        Vector2 cell = getInventoryCell(screenX, screenY);
+        if (cell != null) {
+            hero.getInventory().selectItem((int) cell.x, (int) cell.y);
+            if (!hero.getInventory().isSelectedCellEmpty()) {
+                hero.getInventory().consume();
+                return;
+            }
+        }
+        cell = getPanelCell(screenX, screenY);
+        if (cell != null) {
+            hero.getPanel().setSelectedIndex((int) cell.x);
+            if (!hero.getPanel().isSelectedCellEmpty()) {
+                hero.getPanel().consume();
+            }
+        }
     }
 
 

@@ -15,9 +15,8 @@ public class Inventory extends Panel {
 
     public int selectedRow, selectedColumn;
 
-    private Hero hero;
-
     public Inventory(Hero hero) {
+        super(hero);
         data = new Collectible[40];
         selectedRow = 0;
         selectedColumn = 0;
@@ -35,19 +34,9 @@ public class Inventory extends Panel {
         return data[selectedRow * WIDTH + selectedColumn];
     }
 
-
     public void consume() {
         Collectible item = getSelectedItem();
-
-        if (Items.getInstance().isHerb(item.getId())) {
-            hero.inflictDamage(20);
-
-            hero.revealHerbProperties(item.getId());
-
-            for (HerbProperty property : Herbs.getInstance().getPropertiesOfHerb(item.id)) {
-                hero.addActiveEffect(property.getEffect());
-            }
-
+        if (consumeSelected(item)) {
             if (item.decreaseCount(1) == 0) {
                 drop(selectedRow * WIDTH + selectedColumn);
                 selectedRow = 0;
@@ -55,6 +44,27 @@ public class Inventory extends Panel {
             }
         }
     }
+
+
+    //    public void consume() {
+//        Collectible item = getSelectedItem();
+//
+//        if (Items.getInstance().isHerb(item.getId())) {
+//            hero.inflictDamage(20);
+//
+//            hero.revealHerbProperties(item.getId());
+//
+//            for (HerbProperty property : Herbs.getInstance().getPropertiesOfHerb(item.id)) {
+//                hero.addActiveEffect(property.getEffect());
+//            }
+//
+//            if (item.decreaseCount(1) == 0) {
+//                drop(selectedRow * WIDTH + selectedColumn);
+//                selectedRow = 0;
+//                selectedColumn = 0;
+//            }
+//        }
+//    }
 
     public boolean has(int id, int count) {
         for (Collectible c : data)

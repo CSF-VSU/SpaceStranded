@@ -1,5 +1,9 @@
 package ru.vsu.csf.twopeoplestudios.model.collectibles;
 
+import ru.vsu.csf.twopeoplestudios.model.characters.Hero;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.HerbProperty;
+import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.Herbs;
+
 public class Panel {
 
     public static final int WIDTH = 10;
@@ -8,12 +12,15 @@ public class Panel {
     protected Collectible[] data;
     protected int selectedIndex;
 
+    protected Hero hero;
+
     public Collectible[] getData() {
         return data;
     }
 
-    public Panel() {
+    public Panel(Hero hero) {
         data = new Collectible[10];
+        this.hero = hero;
     }
 
     public void setSelectedIndex(int selectedIndex) {
@@ -102,5 +109,30 @@ public class Panel {
 
     public void putInSelectedCell(Collectible item) {
         data[selectedIndex] = item;
+    }
+
+    protected boolean consumeSelected(Collectible item) {
+        if (Items.getInstance().isHerb(item.getId())) {
+            hero.inflictDamage(20);
+
+            hero.revealHerbProperties(item.getId());
+
+            for (HerbProperty property : Herbs.getInstance().getPropertiesOfHerb(item.id)) {
+                hero.addActiveEffect(property.getEffect());
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    public void consume() {
+        Collectible item = getSelectedItem();
+        if (consumeSelected(item)) {
+            if (item.decreaseCount(1) == 0) {
+                drop(selectedIndex);
+                selectedIndex = 0;
+            }
+        }
     }
 }
