@@ -34,8 +34,8 @@ public class Hero extends Character {
 
     //private static final float VELOCITY = 15000; //большим цифрам мы обязаны камере и ее настройкам. Не удивляйся
     //private static final float RUN_SPEED = 45000;\
-    private static final float VELOCITY = 1;
-    private static final float RUN_SPEED = 4;
+    private static final float VELOCITY = 4;
+    private static final float RUN_SPEED = 7;
 
     //region Declarations
     Vector2 velocity;

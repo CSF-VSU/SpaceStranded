@@ -17,15 +17,21 @@ public class Monster extends Character {
     private static final float FRICTION = 0.5f;
     private static final float DENSITY = 0.8f;
 
-    private static final float RUN_SPEED = 1;
+    private static final float RUN_SPEED = 3f;
 
     private static final float VISIBLE_BREADTH = 2;
     private static final float VISIBLE_DISTANCE = 4;
     private static final float SENSOR_SHIFT = VISIBLE_DISTANCE - 0.5f;
+    private static final float TG_PI_8 = (float) Math.tan(Math.PI / 8);
+    private static final float TG_3_PI_8 = (float) Math.tan(3 * Math.PI / 8);
 
     private BehaviourState state;
 
     private MonsterHeroVision monsterHeroVision;
+
+    private boolean seesHero;
+    private Vector2 heroPosition;
+
 
     public Vector2 getPosition() {
         return body.getPosition();
@@ -36,6 +42,7 @@ public class Monster extends Character {
         this.charPosition = spawnPos;
         this.state = BehaviourState.WANDER;
         this.facing = Facing.DOWN_LEFT;
+        this.seesHero = false;
 
         createBody();
         createVision();
@@ -101,8 +108,6 @@ public class Monster extends Character {
                         position.set(body.getPosition().x + SENSOR_SHIFT * Values.SQRT_2_DIV_2, body.getPosition().y - SENSOR_SHIFT * Values.SQRT_2_DIV_2);
                         break;
                 }
-
-
             }});
         }};
         monsterHeroVision.parent = this;
@@ -129,11 +134,14 @@ public class Monster extends Character {
 
         switch (state) {
             case WANDER:
-
+                if (seesHero)
+                    moveToPoint(heroPosition);
+                else
+                    body.setLinearVelocity(0, 0);
                 break;
         }
         //moveIntoChosenDirection(Facing.DOWN_LEFT);
-        //moveToPoint(new Vector2(64 * MapRenderer.CELL_SIZE, 32 * MapRenderer.CELL_SIZE));
+        //moveToPoint(new Vector2(10, 10));
     }
 
     private void updateSensors() {
@@ -183,11 +191,12 @@ public class Monster extends Character {
     }
 
     public void seeHero(Vector2 heroPosition) {
-        Gdx.app.log("Monster", "I see him!");
+        this.heroPosition = heroPosition;
+        seesHero = true;
     }
 
     public void stopSeeHero() {
-        Gdx.app.log("Monster", "I lost him!");
+        seesHero = false;
     }
 
     public void moveIntoChosenDirection (Facing direction) {
@@ -232,16 +241,53 @@ public class Monster extends Character {
     }
 
     public void moveToPoint (Vector2 point) {
-        float curX = this.body.getPosition().x;
-        float curY = this.body.getPosition().y;
-        float deltaX = point.x - curX;
-        float deltaY = point.y - curY;
-        float tg = (deltaY) / (deltaX);
-        if (deltaX > 0)
-            this.body.applyLinearImpulse(RUN_SPEED, tg * RUN_SPEED, curX, curY, true);
-        else
-            this.body.applyLinearImpulse(-RUN_SPEED, -tg * RUN_SPEED, curX, curY, true);
 
+        Vector2 delta = point.sub(body.getPosition());
+        if (delta.len() < 0.3f) {
+            body.setLinearVelocity(0, 0);
+//            Gdx.app.log("", "Job done");
+            return;
+        }
 
+        if (delta.len() > RUN_SPEED)
+            delta.scl(RUN_SPEED / delta.len());
+
+        //body.applyForce(delta, body.getPosition(), true);
+        //body.setLinearVelocity(body.getLinearVelocity().nor().scl(RUN_SPEED));
+
+        body.setLinearVelocity(delta.x, delta.y);
+        if (delta.x > 0)
+            if (delta.y > 0) {
+                if (delta.y / delta.x < TG_PI_8)
+                    this.facing = Facing.RIGHT;
+                else if (delta.y / delta.x < TG_3_PI_8)
+                    this.facing = Facing.UP_RIGHT;
+                else
+                    this.facing = Facing.UP;
+            }
+            else {
+                if (delta.y / delta.x > -TG_PI_8)
+                    this.facing = Facing.RIGHT;
+                else if (delta.y / delta.x > -TG_3_PI_8)
+                    this.facing = Facing.DOWN_RIGHT;
+                else
+                    this.facing = Facing.DOWN;
+            }
+        else if (delta.y > 0) {
+            if (delta.y / delta.x > -TG_PI_8)
+                this.facing = Facing.LEFT;
+            else if (delta.y / delta.x > -TG_3_PI_8)
+                this.facing = Facing.UP_LEFT;
+            else
+                this.facing = Facing.UP;
+        }
+        else {
+            if (delta.y / delta.x < TG_PI_8)
+                this.facing = Facing.LEFT;
+            else if (delta.y / delta.x < TG_3_PI_8)
+                this.facing = Facing.DOWN_LEFT;
+            else
+                this.facing = Facing.DOWN;
+        }
     }
 }
