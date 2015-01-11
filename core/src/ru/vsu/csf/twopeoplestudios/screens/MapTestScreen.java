@@ -117,6 +117,8 @@ public class MapTestScreen extends AbstractScreen {
                                         TILE_SIZE, TILE_SIZE);
                             else {
                                 int index = map[i][j].height;
+                                if (index < 0)
+                                    index = 0;
                                 if (index >= lands.size()) {
                                     uiBatch.draw(lands.get(12),
                                             i * TILE_SIZE + MARGIN_LEFT,
