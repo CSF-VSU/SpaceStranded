@@ -97,7 +97,7 @@ public class MapRenderer {
 
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-                if (Settings.SPAWN_BADASS_TREES && mapScheme[i][j].type == TerrainType.GROUND && random.nextInt(4) == 2)
+                if (Settings.SPAWN_BADASS_TREES && mapScheme[i][j].type == TerrainType.GROUND && random.nextInt(8) == 2)
                     cell.setTile(treeTile);
 
                 treeLayer.setCell(i, j, cell);

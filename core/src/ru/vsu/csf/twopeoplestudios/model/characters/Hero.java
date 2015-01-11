@@ -1,12 +1,10 @@
 package ru.vsu.csf.twopeoplestudios.model.characters;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import ru.vsu.csf.twopeoplestudios.Values;
 import ru.vsu.csf.twopeoplestudios.model.characters.effects.Effect;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Collectible;
 import ru.vsu.csf.twopeoplestudios.model.collectibles.Inventory;
@@ -18,9 +16,11 @@ import ru.vsu.csf.twopeoplestudios.model.collectibles.herbs.KnownHerb;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.EntityTypes;
 import ru.vsu.csf.twopeoplestudios.model.contactListener.collisionUserData.HeroUserData;
 import ru.vsu.csf.twopeoplestudios.model.map.Map;
-import ru.vsu.csf.twopeoplestudios.model.weapons.*;
+import ru.vsu.csf.twopeoplestudios.model.weapons.Facing;
+import ru.vsu.csf.twopeoplestudios.model.weapons.HeroAttack;
+import ru.vsu.csf.twopeoplestudios.model.weapons.MeleeWeapon;
+import ru.vsu.csf.twopeoplestudios.model.weapons.RangedWeapon;
 import ru.vsu.csf.twopeoplestudios.model.world.World;
-import ru.vsu.csf.twopeoplestudios.renderers.MapRenderer;
 
 import java.util.ArrayList;
 
@@ -47,8 +47,8 @@ public class Hero extends Character {
 
     Map map;
 
-    private int maxFl;
-    private int maxSt;
+    private float maxFl;
+    private float maxSt;
 
     private float hunger;
     private float stamina;
@@ -104,15 +104,15 @@ public class Hero extends Character {
         return panel;
     }
 
-    public int getMaxHp() {
+    public float getMaxHp() {
         return maxHp;
     }
 
-    public int getMaxFl() {
+    public float getMaxFl() {
         return maxFl;
     }
 
-    public int getMaxSt() {
+    public float getMaxSt() {
         return maxSt;
     }
 
@@ -275,7 +275,7 @@ public class Hero extends Character {
     }
 
     private void regen(float delta) {
-        if (hpRegenSpeed * delta <= maxHp - hp)
+        if ((hpRegenSpeed * delta) <= (maxHp - hp))
             hp += hpRegenSpeed * delta;
         else
             hp = maxHp;
@@ -285,7 +285,7 @@ public class Hero extends Character {
         else
             hunger = 0;
 
-        if (stRegenSpeed * delta <= maxSt - stamina)
+        if ((stRegenSpeed * delta) <= (maxSt - stamina))
             stamina += hpRegenSpeed * delta;
         else
             stamina = maxSt;

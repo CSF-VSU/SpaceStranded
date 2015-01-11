@@ -12,8 +12,8 @@ public abstract class Character {
     protected Vector2 charPosition;
     protected Body body;
 
-    protected int maxHp;
-    protected int hp;
+    protected float maxHp;
+    protected float hp;
 
     protected Facing facing;
 
